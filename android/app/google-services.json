@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "396667099785",
+    "project_id": "hayy-hotelio-app",
+    "storage_bucket": "hayy-hotelio-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:396667099785:android:9531bbe519959b8d200458",
+        "android_client_info": {
+          "package_name": "com.hayyhotelio.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDVK605WC_C-1RibSfXQO_V9-zL4aPyVlk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
