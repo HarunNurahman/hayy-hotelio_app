@@ -32,14 +32,12 @@ dependencies:
   firebase_core: ^2.32.0
   flutter:
     sdk: flutter
+  get: ^4.6.6
+  google_fonts: ^6.2.1
+  intl: ^0.19.0
+  shared_preferences: ^2.2.3
 
 dev_dependencies:
-
-  # The "flutter_lints" package below contains a set of recommended lints to
-  # encourage good coding practices. The lint set provided by the package is
-  # activated in the `analysis_options.yaml` file located at the root of your
-  # package. See that file for information about deactivating specific lint
-  # rules and activating additional ones.
   flutter_lints: ^3.0.0
   flutter_test:
     sdk: flutter
@@ -57,7 +55,6 @@ flutter:
   assets:
     - assets/icons/
     - assets/images/
-
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
   # For details regarding adding assets from package dependencies, see
