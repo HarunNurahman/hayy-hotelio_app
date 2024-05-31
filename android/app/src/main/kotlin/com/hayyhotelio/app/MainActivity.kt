@@ -1,4 +1,4 @@
-package com.example.hayy_hotelio_app
+package com.hayyhotelio.app
 
 import io.flutter.embedding.android.FlutterActivity
 
