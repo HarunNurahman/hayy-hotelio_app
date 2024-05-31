@@ -4,9 +4,10 @@ import 'package:hayy_hotelio_app/pages/widgets/custom_button.dart';
 import 'package:hayy_hotelio_app/pages/widgets/custom_textformfield.dart';
 import 'package:hayy_hotelio_app/shared/style.dart';
 
-class SignInPage extends StatelessWidget {
-  SignInPage({super.key});
+class SignUpPage extends StatelessWidget {
+  SignUpPage({super.key});
 
+  final nameController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
@@ -30,11 +31,17 @@ class SignInPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 100),
                   Text(
-                    'Sign In\nTo Your Account',
+                    'Create\nNew Account',
                     style: blackTextStyle.copyWith(
                       fontSize: 18,
                       fontWeight: semiBold,
                     ),
+                  ),
+                  const SizedBox(height: 16),
+                  // Full name input
+                  CustomTextFormField(
+                    textController: nameController,
+                    hintText: 'Full Name',
                   ),
                   const SizedBox(height: 16),
                   // Email Input
@@ -52,7 +59,7 @@ class SignInPage extends StatelessWidget {
                   const SizedBox(height: 30),
                   // Sign In Button
                   CustomButton(
-                    text: 'Sign In',
+                    text: 'Sign Up',
                     width: double.infinity,
                     height: 50,
                     onTap: () => Get.toNamed('/dashboard'),
@@ -60,9 +67,9 @@ class SignInPage extends StatelessWidget {
                   const SizedBox(height: 30),
                   Center(
                     child: GestureDetector(
-                      onTap: () => Get.toNamed('/sign-up'),
+                      onTap: () => Get.toNamed('/sign-in'),
                       child: Text(
-                        'Create New Account',
+                        'Sign In to My Account',
                         style: grayTextStyle.copyWith(
                           fontSize: 16,
                           fontWeight: medium,

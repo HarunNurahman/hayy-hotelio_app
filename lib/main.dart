@@ -5,6 +5,7 @@ import 'package:hayy_hotelio_app/firebase_options.dart';
 import 'package:hayy_hotelio_app/pages/dashboard_page.dart';
 import 'package:hayy_hotelio_app/pages/sign-in_page.dart';
 import 'package:hayy_hotelio_app/pages/onboarding_page.dart';
+import 'package:hayy_hotelio_app/pages/sign-up_page.dart';
 import 'package:hayy_hotelio_app/services/session_service.dart';
 import 'package:hayy_hotelio_app/shared/style.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -39,13 +40,14 @@ class MyApp extends StatelessWidget {
               if (snapshot.data == null || snapshot.data!.id == null) {
                 return const OnboardingPage();
               } else {
-                return DashboardPage();
+                return const DashboardPage();
               }
             },
           );
         },
         '/sign-in': (context) => SignInPage(),
-        '/dashboard': (context) => DashboardPage(),
+        '/sign-up': (context) => SignUpPage(),
+        '/dashboard': (context) => const DashboardPage(),
       },
     );
   }

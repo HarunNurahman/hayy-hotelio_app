@@ -4,10 +4,14 @@ import 'package:hayy_hotelio_app/shared/style.dart';
 class CustomTextFormField extends StatelessWidget {
   final String hintText;
   final bool obsecureText;
+  final bool isSearchOn;
   final TextEditingController? textController;
+  final VoidCallback? onTap;
   const CustomTextFormField({
     super.key,
     required this.hintText,
+    this.isSearchOn = false,
+    this.onTap,
     this.textController,
     this.obsecureText = false,
   });
@@ -43,6 +47,22 @@ class CustomTextFormField extends StatelessWidget {
           borderRadius: BorderRadius.circular(50),
           borderSide: BorderSide(color: darkGrayColor),
         ),
+        suffixIcon: isSearchOn
+            ? GestureDetector(
+                onTap: onTap,
+                child: Container(
+                  width: 50,
+                  height: 50,
+                  decoration: const BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage(
+                        'assets/icons/ic_search.png',
+                      ),
+                    ),
+                  ),
+                ),
+              )
+            : null,
       ),
     );
   }
