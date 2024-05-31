@@ -13,6 +13,7 @@ Color orangeColor = const Color(0xFFFA8F29);
 // Text style
 TextStyle blackTextStyle = GoogleFonts.poppins(color: blackColor);
 TextStyle grayTextStyle = GoogleFonts.poppins(color: grayColor);
+TextStyle whiteTextStyle = GoogleFonts.poppins(color: whiteColor);
 
 // Font weight
 FontWeight light = FontWeight.w300;
