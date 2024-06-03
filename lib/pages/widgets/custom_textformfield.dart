@@ -19,6 +19,7 @@ class CustomTextFormField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      validator: (value) => value == '' ? 'Field cannot be empty' : null, 
       controller: textController,
       obscureText: obsecureText,
       style: blackTextStyle.copyWith(
