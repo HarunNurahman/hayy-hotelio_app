@@ -18,8 +18,7 @@ class CategoryItem extends StatelessWidget {
       onTap: onTap,
       child: Container(
         margin: const EdgeInsets.only(right: 16),
-        width: 100,
-        height: 50,
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
         decoration: BoxDecoration(
           color: isSelected ? greenColor : whiteColor,
           borderRadius: BorderRadius.circular(20),

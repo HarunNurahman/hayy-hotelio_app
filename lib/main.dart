@@ -40,14 +40,14 @@ class MyApp extends StatelessWidget {
               if (snapshot.data == null || snapshot.data!.id == null) {
                 return const OnboardingPage();
               } else {
-                return const DashboardPage();
+                return DashboardPage();
               }
             },
           );
         },
         '/sign-in': (context) => SignInPage(),
         '/sign-up': (context) => SignUpPage(),
-        '/dashboard': (context) => const DashboardPage(),
+        '/dashboard': (context) => DashboardPage(),
       },
     );
   }

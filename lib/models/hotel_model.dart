@@ -5,7 +5,7 @@ class HotelModel {
   final List<String>? image;
   final int? price;
   final String? location;
-  final double? rating;
+  final double? rate;
   final String? description;
   final List<Map<String, dynamic>>? activity;
   final String? category;
@@ -17,7 +17,7 @@ class HotelModel {
     this.image,
     this.price,
     this.location,
-    this.rating,
+    this.rate,
     this.description,
     this.activity,
     this.category,
@@ -30,7 +30,7 @@ class HotelModel {
         image: List<String>.from(json["image"].map((x) => x)),
         price: json["price"],
         location: json["location"],
-        rating: json["rating"]?.toDouble(),
+        rate: json["rate"].toDouble(),
         description: json["description"],
         activity: List<Map<String, dynamic>>.from(json["activity"]),
         category: json["category"],
@@ -43,7 +43,7 @@ class HotelModel {
         "image": List<dynamic>.from(image!.map((x) => x)),
         "price": price,
         "location": location,
-        "rating": rating,
+        "rate": rate,
         "description": description,
         "activity": activity,
         "category": category,
