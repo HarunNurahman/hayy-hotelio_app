@@ -31,6 +31,16 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         scaffoldBackgroundColor: lightGrayColor,
+        appBarTheme: AppBarTheme(
+          backgroundColor: lightGrayColor,
+          elevation: 0,
+          centerTitle: true,
+          iconTheme: IconThemeData(color: blackColor),
+          titleTextStyle: blackTextStyle.copyWith(
+            fontSize: 18,
+            fontWeight: semiBold,
+          ),
+        ),
       ),
       routes: {
         '/': (context) {
