@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hayy_hotelio_app/pages/widgets/custom_button.dart';
 import 'package:hayy_hotelio_app/pages/widgets/custom_textformfield.dart';
-import 'package:hayy_hotelio_app/shared/shared_method.dart';
 import 'package:hayy_hotelio_app/shared/style.dart';
 import 'package:hayy_hotelio_app/sources/user_source.dart';
 
@@ -18,10 +17,11 @@ class SignInPage extends StatelessWidget {
       UserSource.signIn(emailController.text, passwordController.text).then(
         (response) {
           if (response['success']) {
-            showCustomSnackBar(context, response['message']);
+            print(response['message']);
             Get.toNamed('/dashboard');
           } else {
-            showCustomSnackBar(context, response['message']);
+            print(response['message']);
+
           }
         },
       );

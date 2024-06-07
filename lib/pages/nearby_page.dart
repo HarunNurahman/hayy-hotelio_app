@@ -4,6 +4,7 @@ import 'package:hayy_hotelio_app/controllers/nearby-hotel_controller.dart';
 import 'package:hayy_hotelio_app/models/hotel_model.dart';
 import 'package:hayy_hotelio_app/pages/widgets/category_item.dart';
 import 'package:hayy_hotelio_app/pages/widgets/custom_textformfield.dart';
+import 'package:hayy_hotelio_app/pages/widgets/hotel_item.dart';
 import 'package:hayy_hotelio_app/shared/style.dart';
 
 class NearbyPage extends StatelessWidget {
@@ -12,9 +13,9 @@ class NearbyPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 30),
+    return Scaffold(
+      body: Padding(
+        padding: const EdgeInsets.only(right: 24, left: 24, top: 30),
         child: Column(
           children: [
             // Header
@@ -68,6 +69,8 @@ class NearbyPage extends StatelessWidget {
     );
   }
 
+  // Search bar widget
+
   Widget searchBar() {
     return Container(
       margin: const EdgeInsets.only(top: 30),
@@ -81,12 +84,12 @@ class NearbyPage extends StatelessWidget {
     );
   }
 
-  // Category tab
+  // Category tab widget
   Widget categoryTab() {
     return GetBuilder<NearbyHotelController>(
       builder: (item) {
         return Container(
-          margin: const EdgeInsets.only(top: 30),
+          margin: const EdgeInsets.only(top: 30, bottom: 30),
           height: 50,
           width: double.infinity,
           child: ListView.builder(
@@ -107,39 +110,39 @@ class NearbyPage extends StatelessWidget {
       },
     );
   }
-
+ 
+  // Hotel list widget
   Widget hotelList() {
-    return GetBuilder<NearbyHotelController>(
-      builder: (_) {
-        List<HotelModel> list = _.category == 'All Places'
-            ? _.hotelList
-            : _.hotelList
-                .where((e) => e.category == nearbyHotelController.category)
-                .toList();
+    return Expanded(
+      child: GetBuilder<NearbyHotelController>(
+        builder: (_) {
+          List<HotelModel> list = _.category == 'All Places'
+              ? _.hotelList
+              : _.hotelList
+                  .where((e) => e.category == nearbyHotelController.category)
+                  .toList();
 
-        if (list.isEmpty) {
-          return Container(
-            margin: const EdgeInsets.only(top: 30),
-            child: Center(
-              child: Text('No hotel found', style: blackTextStyle),
-            ),
-          );
-        }
-
-        return SizedBox(
-          width: double.infinity,
-          height: 150,
-          child: ListView.builder(
+          if (list.isEmpty) {
+            return Container(
+              margin: const EdgeInsets.only(top: 30),
+              child: Center(
+                child: Text('No hotel found', style: blackTextStyle),
+              ),
+            );
+          }
+      
+          return ListView.builder(
+            padding: EdgeInsets.zero,
             itemCount: list.length,
             itemBuilder: (context, index) {
               HotelModel hotel = list[index];
-              return Center(
-                child: Text(hotel.name!),
+              return HotelItem(
+                hotel: hotel,
               );
             },
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 }

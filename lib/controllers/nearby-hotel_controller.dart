@@ -18,7 +18,7 @@ class NearbyHotelController extends GetxController {
       ];
 
   final _hotelList = <HotelModel>[].obs;
-  List<HotelModel> get hotelList => _hotelList.value;
+  List<HotelModel> get hotelList => _hotelList;
 
   getHotelList() async {
     _hotelList.value = await HotelSource.getHotel();

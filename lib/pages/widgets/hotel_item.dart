@@ -1,17 +1,18 @@
 import 'package:flutter/widgets.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:hayy_hotelio_app/models/hotel_model.dart';
 import 'package:hayy_hotelio_app/shared/shared_method.dart';
 import 'package:hayy_hotelio_app/shared/style.dart';
 
 class HotelItem extends StatelessWidget {
-  final String name;
-  final num price;
-  final String imgUrl;
+  final HotelModel hotel;
   final VoidCallback? onTap;
   const HotelItem({
     super.key,
-    required this.name,
-    required this.price,
-    required this.imgUrl,
+    // required this.name,
+    // required this.price,
+    // required this.imgUrl,
+    required this.hotel,
     this.onTap,
   });
 
@@ -39,7 +40,7 @@ class HotelItem extends StatelessWidget {
                 decoration: BoxDecoration(
                   image: DecorationImage(
                     fit: BoxFit.cover,
-                    image: AssetImage(imgUrl),
+                    image: NetworkImage(hotel.cover!),
                   ),
                 ),
               ),
@@ -54,7 +55,7 @@ class HotelItem extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        name,
+                        hotel.name!,
                         style: blackTextStyle.copyWith(
                           fontSize: 18,
                           fontWeight: semiBold,
@@ -68,7 +69,7 @@ class HotelItem extends StatelessWidget {
                               style: grayTextStyle,
                             ),
                             TextSpan(
-                              text: AppFormat.currency(price),
+                              text: AppFormat.currency(hotel.price!),
                               style: grayTextStyle.copyWith(
                                 color: darkGrayColor,
                                 fontWeight: semiBold,
@@ -83,33 +84,18 @@ class HotelItem extends StatelessWidget {
                       )
                     ],
                   ),
-                  Row(
-                    children: [
-                      Image.asset(
-                        'assets/icons/ic_star_on.png',
-                        width: 18,
-                      ),
-                      const SizedBox(width: 4),
-                      Image.asset(
-                        'assets/icons/ic_star_on.png',
-                        width: 18,
-                      ),
-                      const SizedBox(width: 4),
-                      Image.asset(
-                        'assets/icons/ic_star_on.png',
-                        width: 18,
-                      ),
-                      const SizedBox(width: 4),
-                      Image.asset(
-                        'assets/icons/ic_star_on.png',
-                        width: 18,
-                      ),
-                      const SizedBox(width: 4),
-                      Image.asset(
-                        'assets/icons/ic_star_off.png',
-                        width: 18,
-                      ),
-                    ],
+                  RatingBar.builder(
+                    initialRating: hotel.rate!,
+                    minRating: 0,
+                    direction: Axis.horizontal,
+                    allowHalfRating: true,
+                    ignoreGestures: true,
+                    itemSize: 18,
+                    unratedColor: lightGrayColor,
+                    itemBuilder: (context, index) {
+                      return Image.asset('assets/icons/ic_star_on.png');
+                    },
+                    onRatingUpdate: (value) {},
                   )
                 ],
               ),
