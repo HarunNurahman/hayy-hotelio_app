@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hayy_hotelio_app/controllers/nearby-hotel_controller.dart';
 import 'package:hayy_hotelio_app/models/hotel_model.dart';
-import 'package:hayy_hotelio_app/pages/detail-hotel_page.dart';
 import 'package:hayy_hotelio_app/pages/widgets/category_item.dart';
 import 'package:hayy_hotelio_app/pages/widgets/custom_textformfield.dart';
 import 'package:hayy_hotelio_app/pages/widgets/hotel_item.dart';
@@ -139,7 +138,11 @@ class NearbyPage extends StatelessWidget {
               HotelModel hotel = list[index];
               return HotelItem(
                 hotel: hotel,
-                onTap: () => Get.to(() => const DetailHotelPage()),
+                  onTap: () => Navigator.pushNamed(
+                        context,
+                        '/detail-hotel',
+                        arguments: hotel,
+                      )
               );
             },
           );

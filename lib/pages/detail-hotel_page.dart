@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:hayy_hotelio_app/models/hotel_model.dart';
 import 'package:hayy_hotelio_app/pages/widgets/activity_item.dart';
 import 'package:hayy_hotelio_app/pages/widgets/custom_button.dart';
 import 'package:hayy_hotelio_app/pages/widgets/facility_item.dart';
+import 'package:hayy_hotelio_app/shared/shared_method.dart';
 import 'package:hayy_hotelio_app/shared/style.dart';
 
 class DetailHotelPage extends StatelessWidget {
@@ -9,46 +11,13 @@ class DetailHotelPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    HotelModel hotel = ModalRoute.of(context)!.settings.arguments as HotelModel;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Hotel Details'),
       ),
-      bottomNavigationBar: Container(
-        width: double.infinity,
-        height: 100,
-        padding: const EdgeInsets.symmetric(horizontal: 24),
-        decoration: BoxDecoration(
-          color: whiteColor,
-          border: Border.all(color: lightGrayColor),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            // Price/night
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  '\$12,900',
-                  style: grayTextStyle.copyWith(
-                    fontSize: 22,
-                    fontWeight: bold,
-                    color: darkGrayColor,
-                  ),
-                ),
-                Text('per night', style: grayTextStyle),
-              ],
-            ),
-            // Button
-            CustomButton(
-              text: 'Booking Now',
-              width: 180,
-              onTap: () {},
-            )
-          ],
-        ),
-      ),
+      bottomNavigationBar: bottomNavBar(hotel),
       body: Container(
         margin: const EdgeInsets.only(top: 30),
         padding: const EdgeInsets.only(left: 24, right: 24, top: 30),
@@ -65,14 +34,14 @@ class DetailHotelPage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Image detail hotel
-                detailImage(),
+                detailImage(hotel),
                 const SizedBox(height: 16),
                 // Hotel information
-                hotelInfo(),
+                hotelInfo(hotel),
                 const SizedBox(height: 16),
                 // Description
                 Text(
-                  'This hotel is still set in one of the most  wateringly beautiful lagoons in eye ofs the country, a vision of broad white beaches, shape-shifting sandbag',
+                  hotel.description!,
                   style: blackTextStyle.copyWith(
                     fontSize: 16,
                     wordSpacing: 1,
@@ -83,7 +52,7 @@ class DetailHotelPage extends StatelessWidget {
                 facility(),
                 const SizedBox(height: 16),
                 // Activity
-                activity(),
+                activity(hotel),
                 const SizedBox(height: 30)
               ],
             ),
@@ -93,32 +62,32 @@ class DetailHotelPage extends StatelessWidget {
     );
   }
 
-  Widget detailImage() {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(16),
-            child: Image.asset(
-              'assets/images/img_detail-hotel_1.png',
-              width: 280,
+  Widget detailImage(HotelModel hotel) {
+    return SizedBox(
+      height: 200,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: hotel.image!.length,
+        itemBuilder: (context, index) {
+          return Padding(
+            padding: EdgeInsets.only(
+              right: index == hotel.image!.length - 1 ? 0 : 18,
             ),
-          ),
-          const SizedBox(width: 18),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(16),
-            child: Image.asset(
-              'assets/images/img_detail-hotel_2.png',
-              width: 280,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(16),
+              child: Image.network(
+                hotel.image![index],
+                fit: BoxFit.cover,
+                width: 280,
+              ),
             ),
-          ),
-        ],
+          );
+        },
       ),
     );
   }
 
-  Widget hotelInfo() {
+  Widget hotelInfo(HotelModel hotel) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -127,23 +96,23 @@ class DetailHotelPage extends StatelessWidget {
           children: [
             // Hotel name
             Text(
-              'Round O\' Park',
+              hotel.name!,
               style: blackTextStyle.copyWith(
                 fontSize: 22,
                 fontWeight: semiBold,
               ),
             ),
             const SizedBox(height: 2),
-            Text('Jakarta, Indonesia', style: grayTextStyle),
+            Text(hotel.location!, style: grayTextStyle),
           ],
         ),
         // Rating
         Row(
           children: [
-            Image.asset('assets/icons/ic_star_on.png', width: 28),
-            const SizedBox(width: 2),
+            Image.asset('assets/icons/ic_star_on.png', width: 24),
+            const SizedBox(width: 4),
             Text(
-              '4.8',
+              hotel.rate.toString(),
               style: blackTextStyle.copyWith(
                 fontSize: 16,
                 fontWeight: semiBold,
@@ -189,7 +158,7 @@ class DetailHotelPage extends StatelessWidget {
     );
   }
 
-  Widget activity() {
+  Widget activity(HotelModel hotel) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -200,23 +169,65 @@ class DetailHotelPage extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 6),
-        const Row(
-          children: [
-            ActivityItem(
-              name: 'Kayak',
-              imgUrl: 'assets/images/img_activity_1.png',
-            ),
-            ActivityItem(
-              name: 'Climbing',
-              imgUrl: 'assets/images/img_activity_2.png',
-            ),
-            ActivityItem(
-              name: 'Mini Soccer',
-              imgUrl: 'assets/images/img_activity_3.png',
-            ),
-          ],
+        SizedBox(
+          height: 100,
+          child: ListView.builder(
+            shrinkWrap: true,
+            scrollDirection: Axis.horizontal,
+            itemCount: hotel.activity!.length,
+            itemBuilder: (context, index) {
+              return Padding(
+                padding: EdgeInsets.only(
+                  right: index == hotel.activity!.length - 1 ? 0 : 16,
+                ),
+                child: ActivityItem(
+                  name: hotel.activity![index]['name'],
+                  imgUrl: hotel.activity![index]['image'],
+                ),
+              );
+            },
+          ),
         )
       ],
+    );
+  }
+
+  Widget bottomNavBar(HotelModel hotel) {
+    return Container(
+      width: double.infinity,
+      height: 100,
+      padding: const EdgeInsets.symmetric(horizontal: 24),
+      decoration: BoxDecoration(
+        color: whiteColor,
+        border: Border.all(color: lightGrayColor),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          // Price/night
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                AppFormat.currency(hotel.price!),
+                style: grayTextStyle.copyWith(
+                  fontSize: 22,
+                  fontWeight: bold,
+                  color: darkGrayColor,
+                ),
+              ),
+              Text('per night', style: grayTextStyle),
+            ],
+          ),
+          // Button
+          CustomButton(
+            text: 'Booking Now',
+            width: 180,
+            onTap: () {},
+          )
+        ],
+      ),
     );
   }
 }

@@ -13,17 +13,13 @@ class ActivityItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Container(
-          margin: const EdgeInsets.only(right: 16),
-          width: 90,
-          height: 70,
-          decoration: BoxDecoration(
-            color: greenColor,
-            borderRadius: BorderRadius.circular(16),
-            image: DecorationImage(
-              image: AssetImage(imgUrl),
-            ),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(16),
+          child: Image.network(
+            imgUrl,
+            width: 90,
           ),
         ),
         const SizedBox(height: 6),
