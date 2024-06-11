@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:hayy_hotelio_app/models/hotel_model.dart';
+import 'package:hayy_hotelio_app/pages/checkout_page.dart';
 import 'package:hayy_hotelio_app/pages/widgets/activity_item.dart';
 import 'package:hayy_hotelio_app/pages/widgets/custom_button.dart';
 import 'package:hayy_hotelio_app/pages/widgets/facility_item.dart';
@@ -224,7 +226,9 @@ class DetailHotelPage extends StatelessWidget {
           CustomButton(
             text: 'Booking Now',
             width: 180,
-            onTap: () {},
+            onTap: () {
+              Get.to(() => const CheckoutPage());
+            },
           )
         ],
       ),
