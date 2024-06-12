@@ -1,34 +1,65 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:hayy_hotelio_app/controllers/user_controller.dart';
+import 'package:hayy_hotelio_app/models/booking_model.dart';
+import 'package:hayy_hotelio_app/models/hotel_model.dart';
 import 'package:hayy_hotelio_app/pages/widgets/custom_button.dart';
 import 'package:hayy_hotelio_app/shared/shared_method.dart';
 import 'package:hayy_hotelio_app/shared/style.dart';
+import 'package:hayy_hotelio_app/sources/booking_source.dart';
 
 class CheckoutPage extends StatelessWidget {
-  const CheckoutPage({super.key});
+  CheckoutPage({super.key});
+
+  final userController = Get.put(UserController());
 
   @override
   Widget build(BuildContext context) {
+    HotelModel hotel = ModalRoute.of(context)!.settings.arguments as HotelModel;
+
     return Scaffold(
       appBar: AppBar(title: const Text('Checkout')),
       body: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 30),
         children: [
           // Booked hotel
-          bookedHotel(),
+          bookedHotel(hotel),
           // Booking detail
-          bookingDetail(),
+          bookingDetail(hotel),
           // Payment options
           paymentOption(),
           CustomButton(
             text: 'Proceed to Payment',
-            onTap: () {},
+            onTap: () {
+              BookingSource.addBooking(
+                userController.data.id!,
+                BookingModel(
+                  id: '',
+                  idHotel: hotel.id!,
+                  cover: hotel.cover!,
+                  name: hotel.name!,
+                  location: hotel.location!,
+                  date: AppFormat.date(DateTime.now().toIso8601String()),
+                  guest: 1,
+                  breakfast: 'Included',
+                  checkInTime: '14:00 WIB',
+                  night: 1,
+                  serviceFee: 15,
+                  activity: 20,
+                  totalPayment: (hotel.price! * 1) + 15 + 20,
+                  status: 'PAID',
+                  isDone: false,
+                ),
+              );
+              Get.toNamed('/checkout-success', arguments: hotel);
+            },
           ),
         ],
       ),
     );
   }
 
-  Widget bookedHotel() {
+  Widget bookedHotel(HotelModel hotel) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -40,8 +71,8 @@ class CheckoutPage extends StatelessWidget {
           // Hotel image
           ClipRRect(
             borderRadius: BorderRadius.circular(16),
-            child: Image.asset(
-              'assets/images/img_hotel_1.png',
+            child: Image.network(
+              hotel.cover!,
               width: 90,
               height: 70,
               fit: BoxFit.cover,
@@ -49,26 +80,28 @@ class CheckoutPage extends StatelessWidget {
           ),
           const SizedBox(width: 12),
           // Hotel name
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Round O\' Park',
-                style: blackTextStyle.copyWith(
-                  fontSize: 16,
-                  fontWeight: semiBold,
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  hotel.name!,
+                  style: blackTextStyle.copyWith(
+                    fontSize: 16,
+                    fontWeight: semiBold,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 4),
-              Text('Jakarta, Indonesia', style: grayTextStyle),
-            ],
+                const SizedBox(height: 4),
+                Text(hotel.location!, style: grayTextStyle),
+              ],
+            ),
           )
         ],
       ),
     );
   }
 
-  Widget bookingDetail() {
+  Widget bookingDetail(HotelModel hotel) {
     return Container(
       margin: const EdgeInsets.only(top: 24),
       padding: const EdgeInsets.all(16),
@@ -84,16 +117,19 @@ class CheckoutPage extends StatelessWidget {
             style: blackTextStyle.copyWith(fontSize: 16, fontWeight: semiBold),
           ),
           const SizedBox(height: 10),
-          bookingItemDetail('Date', 'Mon, 22 January 2022'),
-          bookingItemDetail('Guest', '2 Guest(s)'),
+          bookingItemDetail(
+            'Date',
+            AppFormat.date(DateTime.now().toIso8601String()),
+          ),
+          bookingItemDetail('Guest', '1 Guest(s)'),
           bookingItemDetail('Breakfast', 'Included'),
           bookingItemDetail('Check-in Time', '14:00 WIB'),
-          bookingItemDetail('1 Night', AppFormat.currency(299)),
-          bookingItemDetail('Service Fee', AppFormat.currency(50)),
-          bookingItemDetail('Activities', AppFormat.currency(350)),
+          bookingItemDetail('Duration', '1 Night'),
+          bookingItemDetail('Service Fee', AppFormat.currency(15)),
+          bookingItemDetail('Activities', AppFormat.currency(20)),
           bookingItemDetail(
             'Total Payment',
-            AppFormat.currency(699),
+            AppFormat.currency(hotel.price! + 15 + 20),
             color: darkGrayColor,
           ),
         ],

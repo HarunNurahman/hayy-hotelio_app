@@ -20,6 +20,7 @@ class ActivityItem extends StatelessWidget {
           child: Image.network(
             imgUrl,
             width: 90,
+            height: 70,
           ),
         ),
         const SizedBox(height: 6),

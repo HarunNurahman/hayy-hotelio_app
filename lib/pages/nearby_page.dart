@@ -138,11 +138,9 @@ class NearbyPage extends StatelessWidget {
               HotelModel hotel = list[index];
               return HotelItem(
                 hotel: hotel,
-                  onTap: () => Navigator.pushNamed(
-                        context,
-                        '/detail-hotel',
-                        arguments: hotel,
-                      )
+                onTap: () {
+                  Get.toNamed('/detail-hotel', arguments: hotel);
+                },
               );
             },
           );

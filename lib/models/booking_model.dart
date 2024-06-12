@@ -10,9 +10,9 @@ class BookingModel {
   final String? checkInTime;
   final int? night;
   final int? serviceFee;
-  final String? activity;
+  final int? activity;
   final int? totalPayment;
-  final int? status;
+  final String? status;
   final bool? isDone;
 
   BookingModel({
@@ -69,3 +69,21 @@ class BookingModel {
         "is_done": isDone,
       };
 }
+
+BookingModel get initBooking => BookingModel(
+      id: '',
+      idHotel: '',
+      cover: '',
+      name: '',
+      location: '',
+      date: '',
+      guest: 0,
+      breakfast: '',
+      checkInTime: '',
+      night: 0,
+      serviceFee: 0,
+      activity: 0,
+      totalPayment: 0,
+      status: '',
+      isDone: false,
+    );
