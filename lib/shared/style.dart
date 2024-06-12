@@ -9,6 +9,7 @@ Color grayColor = const Color(0xFFAFAFAF);
 Color blackColor = const Color(0xFF111111);
 Color whiteColor = const Color(0xFFFFFFFF);
 Color orangeColor = const Color(0xFFFA8F29);
+Color redColor = const Color(0xFFFF5862);
 
 // Text style
 TextStyle blackTextStyle = GoogleFonts.poppins(color: blackColor);

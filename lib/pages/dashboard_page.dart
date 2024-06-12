@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hayy_hotelio_app/controllers/navigation_controller.dart';
+import 'package:hayy_hotelio_app/pages/history_page.dart';
 import 'package:hayy_hotelio_app/pages/nearby_page.dart';
 import 'package:hayy_hotelio_app/shared/style.dart';
 
@@ -23,12 +24,7 @@ class DashboardPage extends StatelessWidget {
           case 0:
             return NearbyPage();
           case 1:
-            return Center(
-              child: Text(
-                'Welcome to History Page',
-                style: blackTextStyle,
-              ),
-            );
+            return HistoryPage();
           case 2:
             return Center(
               child: Text(
