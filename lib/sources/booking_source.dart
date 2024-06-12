@@ -29,4 +29,14 @@ class BookingSource {
     result.update({'id': result.id});
     return true;
   }
+
+  static Future<List<BookingModel>> getBooking(String userId) async {
+    var result = await FirebaseFirestore.instance
+        .collection('user')
+        .doc(userId)
+        .collection('booking')
+        .get();
+
+    return result.docs.map((e) => BookingModel.fromJson(e.data())).toList();
+  }
 }
