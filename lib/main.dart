@@ -13,6 +13,8 @@ import 'package:hayy_hotelio_app/services/session_service.dart';
 import 'package:hayy_hotelio_app/shared/style.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
+import 'pages/detail-booking_page.dart';
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -63,7 +65,8 @@ class MyApp extends StatelessWidget {
         '/dashboard': (context) => DashboardPage(),
         '/detail-hotel': (context) => DetailHotelPage(),
         '/checkout': (context) => CheckoutPage(),
-        '/checkout-success': (context) => CheckoutSuccessPage(),
+        '/checkout-success': (context) => const CheckoutSuccessPage(),
+        '/detail-booking': (context) => DetailBookingPage(),
       },
     );
   }

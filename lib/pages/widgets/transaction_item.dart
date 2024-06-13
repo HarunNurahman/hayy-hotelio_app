@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:hayy_hotelio_app/models/booking_model.dart';
 import 'package:hayy_hotelio_app/shared/style.dart';
 
 import '../../shared/shared_method.dart';
 
 class TransactionItem extends StatelessWidget {
-  final String imgUrl;
-  final String name;
-  final String date;
+  // final String imgUrl;
+  // final String name;
+  // final String date;
   final bool isPaid;
+  final BookingModel booking;
   const TransactionItem({
     super.key,
-    required this.imgUrl,
-    required this.name,
-    required this.date,
+    // required this.imgUrl,
+    // required this.name,
+    // required this.date,
+    required this.booking,
     this.isPaid = false,
   });
 
@@ -20,7 +23,7 @@ class TransactionItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(16),
-      margin: const EdgeInsets.only(bottom: 16),
+      margin: const EdgeInsets.only(top: 16),
       decoration: BoxDecoration(
         color: whiteColor,
         borderRadius: BorderRadius.circular(16),
@@ -29,8 +32,8 @@ class TransactionItem extends StatelessWidget {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(16),
-            child: Image.asset(
-              imgUrl,
+            child: Image.network(
+              booking.cover!,
               width: 90,
               height: 70,
               fit: BoxFit.cover,
@@ -42,7 +45,7 @@ class TransactionItem extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  name,
+                  booking.name!,
                   style: blackTextStyle.copyWith(
                     fontSize: 16,
                     fontWeight: semiBold,
@@ -50,7 +53,7 @@ class TransactionItem extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  AppFormat.date(date),
+                  AppFormat.date(booking.date!),
                   style: grayTextStyle,
                 ),
               ],
@@ -59,12 +62,12 @@ class TransactionItem extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
             decoration: BoxDecoration(
-              color: isPaid ? darkGrayColor : redColor,
+              color: booking.status == 'PAID' ? darkGrayColor : redColor,
               borderRadius: BorderRadius.circular(50),
             ),
             child: Center(
               child: Text(
-                isPaid ? 'Paid' : 'Cancelled',
+                booking.status!,
                 style: whiteTextStyle.copyWith(
                   fontSize: 10,
                   fontWeight: semiBold,

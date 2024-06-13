@@ -1,9 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:grouped_list/grouped_list.dart';
+import 'package:hayy_hotelio_app/controllers/history_controller.dart';
+import 'package:hayy_hotelio_app/controllers/user_controller.dart';
+import 'package:hayy_hotelio_app/models/booking_model.dart';
 import 'package:hayy_hotelio_app/pages/widgets/transaction_item.dart';
+import 'package:hayy_hotelio_app/shared/shared_method.dart';
 import 'package:hayy_hotelio_app/shared/style.dart';
+import 'package:intl/intl.dart';
 
-class HistoryPage extends StatelessWidget {
+class HistoryPage extends StatefulWidget {
   const HistoryPage({super.key});
+
+  @override
+  State<HistoryPage> createState() => _HistoryPageState();
+}
+
+class _HistoryPageState extends State<HistoryPage> {
+  final historyController = Get.put(HistoryController());
+  final userController = Get.put(UserController());
+
+  @override
+  void initState() {
+    historyController.getBookingList(userController.data.id!);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -12,8 +33,40 @@ class HistoryPage extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 30),
         children: [
           header(),
-          latestTransaction(),
-          previousTransaction(),
+          const SizedBox(height: 50),
+          GetBuilder<HistoryController>(
+            builder: (_) {
+              return GroupedListView<BookingModel, String>(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                elements: _.bookingList,
+                groupBy: (element) => element.date!,
+                groupSeparatorBuilder: (value) {
+                  String date =
+                      DateFormat('yyyy-MM-dd').format(DateTime.now()) == value
+                          ? 'Latest Transaction'
+                          : AppFormat.dateMonth(value);
+                  return Text(
+                    date,
+                    style: blackTextStyle.copyWith(fontWeight: semiBold),
+                  );
+                },
+                itemBuilder: (context, element) {
+                  return GestureDetector(
+                    onTap: () {
+                      Get.toNamed('/detail-booking', arguments: element);
+                    },
+                    child: TransactionItem(
+                      booking: element,
+                    ),
+                  );
+                },
+                itemComparator: (element1, element2) =>
+                    element1.date!.compareTo(element2.date!),
+                order: GroupedListOrder.DESC,
+              );
+            },
+          ),
         ],
       ),
     );
@@ -45,62 +98,16 @@ class HistoryPage extends StatelessWidget {
                 style: blackTextStyle.copyWith(fontSize: 24, fontWeight: bold),
               ),
               const SizedBox(height: 4),
-              Text(
-                '3 Transaction(s)',
-                style: grayTextStyle,
+              Obx(
+                () {
+                  return Text(
+                    '${historyController.bookingList.length} Transaction(s)',
+                    style: grayTextStyle,
+                  );
+                },
               ),
             ],
           )
-        ],
-      ),
-    );
-  }
-
-  Widget latestTransaction() {
-    return Container(
-      margin: const EdgeInsets.only(top: 50),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Latest Transaction',
-            style: blackTextStyle.copyWith(fontWeight: semiBold),
-          ),
-          const SizedBox(height: 10),
-          TransactionItem(
-            imgUrl: 'assets/images/img_hotel_1.png',
-            name: 'Round O\' Park',
-            date: DateTime.now().toIso8601String(),
-            isPaid: true,
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget previousTransaction() {
-    return Container(
-      margin: const EdgeInsets.only(top: 15),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            '3 May',
-            style: blackTextStyle.copyWith(fontWeight: semiBold),
-          ),
-          const SizedBox(height: 10),
-          TransactionItem(
-            imgUrl: 'assets/images/img_hotel_2.png',
-            name: 'Silverstone',
-            date: DateTime.now().toIso8601String(),
-            isPaid: true,
-          ),
-          TransactionItem(
-            imgUrl: 'assets/images/img_hotel_3.png',
-            name: 'Angga Nest',
-            date: DateTime.now().toIso8601String(),
-            isPaid: false,
-          ),
         ],
       ),
     );

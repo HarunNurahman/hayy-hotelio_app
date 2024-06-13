@@ -1,66 +1,33 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:hayy_hotelio_app/controllers/user_controller.dart';
 import 'package:hayy_hotelio_app/models/booking_model.dart';
-import 'package:hayy_hotelio_app/models/hotel_model.dart';
-import 'package:hayy_hotelio_app/pages/widgets/custom_button.dart';
 import 'package:hayy_hotelio_app/shared/shared_method.dart';
 import 'package:hayy_hotelio_app/shared/style.dart';
-import 'package:hayy_hotelio_app/sources/booking_source.dart';
-import 'package:intl/intl.dart';
 
-class CheckoutPage extends StatelessWidget {
-  CheckoutPage({super.key});
-
-  final userController = Get.put(UserController());
+class DetailBookingPage extends StatelessWidget {
+  const DetailBookingPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    HotelModel hotel = ModalRoute.of(context)!.settings.arguments as HotelModel;
+    BookingModel booking =
+        ModalRoute.of(context)!.settings.arguments as BookingModel;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Checkout')),
+      appBar: AppBar(title: const Text('Detail Booking')),
       body: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 30),
         children: [
           // Booked hotel
-          bookedHotel(hotel),
+          bookedHotel(booking),
           // Booking detail
-          bookingDetail(hotel),
+          bookingDetail(booking),
           // Payment options
           paymentOption(),
-          CustomButton(
-            text: 'Proceed to Payment',
-            onTap: () {
-              BookingSource.addBooking(
-                userController.data.id!,
-                BookingModel(
-                  id: '',
-                  idHotel: hotel.id!,
-                  cover: hotel.cover!,
-                  name: hotel.name!,
-                  location: hotel.location!,
-                  date: DateFormat('yyyy-MM-dd').format(DateTime.now()),
-                  guest: 1,
-                  breakfast: 'Included',
-                  checkInTime: '14:00 WIB',
-                  night: 1,
-                  serviceFee: 15,
-                  activity: 20,
-                  totalPayment: (hotel.price! * 1) + 15 + 20,
-                  status: 'PAID',
-                  isDone: false,
-                ),
-              );
-              Get.toNamed('/checkout-success', arguments: hotel);
-            },
-          ),
         ],
       ),
     );
   }
 
-  Widget bookedHotel(HotelModel hotel) {
+  Widget bookedHotel(BookingModel booking) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -73,7 +40,7 @@ class CheckoutPage extends StatelessWidget {
           ClipRRect(
             borderRadius: BorderRadius.circular(16),
             child: Image.network(
-              hotel.cover!,
+              booking.cover!,
               width: 90,
               height: 70,
               fit: BoxFit.cover,
@@ -86,14 +53,14 @@ class CheckoutPage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  hotel.name!,
+                  booking.name!,
                   style: blackTextStyle.copyWith(
                     fontSize: 16,
                     fontWeight: semiBold,
                   ),
                 ),
                 const SizedBox(height: 4),
-                Text(hotel.location!, style: grayTextStyle),
+                Text(booking.location!, style: grayTextStyle),
               ],
             ),
           )
@@ -102,7 +69,7 @@ class CheckoutPage extends StatelessWidget {
     );
   }
 
-  Widget bookingDetail(HotelModel hotel) {
+  Widget bookingDetail(BookingModel booking) {
     return Container(
       margin: const EdgeInsets.only(top: 24),
       padding: const EdgeInsets.all(16),
@@ -120,17 +87,19 @@ class CheckoutPage extends StatelessWidget {
           const SizedBox(height: 10),
           bookingItemDetail(
             'Date',
-            AppFormat.date(DateTime.now().toIso8601String()),
+            booking.date!,
           ),
-          bookingItemDetail('Guest', '1 Guest(s)'),
-          bookingItemDetail('Breakfast', 'Included'),
-          bookingItemDetail('Check-in Time', '14:00 WIB'),
-          bookingItemDetail('Duration', '1 Night'),
-          bookingItemDetail('Service Fee', AppFormat.currency(15)),
-          bookingItemDetail('Activities', AppFormat.currency(20)),
+          bookingItemDetail('Guest', booking.guest.toString()),
+          bookingItemDetail('Breakfast', booking.breakfast!),
+          bookingItemDetail('Check-in Time', booking.checkInTime!),
+          bookingItemDetail('Duration', '${booking.night.toString()} Night(s)'),
+          bookingItemDetail(
+              'Service Fee', AppFormat.currency(booking.serviceFee!)),
+          bookingItemDetail(
+              'Activities', AppFormat.currency(booking.activity!)),
           bookingItemDetail(
             'Total Payment',
-            AppFormat.currency(hotel.price! + 15 + 20),
+            AppFormat.currency(booking.totalPayment!),
             color: darkGrayColor,
           ),
         ],

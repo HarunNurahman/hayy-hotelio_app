@@ -58,9 +58,13 @@ class NearbyPage extends StatelessWidget {
                 style: blackTextStyle.copyWith(fontSize: 24, fontWeight: bold),
               ),
               const SizedBox(height: 4),
-              Text(
-                '3 Hotel(s)',
-                style: grayTextStyle,
+              Obx(
+                () {
+                  return Text(
+                    '${nearbyHotelController.hotelList.length} Hotel(s)',
+                    style: grayTextStyle,
+                  );
+                },
               ),
             ],
           )

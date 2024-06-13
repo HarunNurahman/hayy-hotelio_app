@@ -35,7 +35,7 @@ class DetailHotelPage extends StatelessWidget {
       ),
       bottomNavigationBar: Obx(
         () {
-          if (bookedData.id != null) return bottomNavBar(hotel);
+          if (bookedData.id == '') return bottomNavBar(hotel);
           return bookedNavBar();
         },
       ),
@@ -274,7 +274,9 @@ class DetailHotelPage extends StatelessWidget {
           Text('You Booked This', style: grayTextStyle),
           // Button
           ElevatedButton(
-            onPressed: () {},
+            onPressed: () {
+              Get.toNamed('/detail-booking', arguments: bookedData);
+            },
             style: ElevatedButton.styleFrom(
               backgroundColor: darkGrayColor,
               minimumSize: const Size(160, 50),

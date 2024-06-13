@@ -6,7 +6,7 @@ class HistoryController extends GetxController {
   final _bookingList = <BookingModel>[].obs;
   List<BookingModel> get bookingList => _bookingList;
 
-  getHotelList(String userId) async {
+  getBookingList(String userId) async {
     _bookingList.value = await BookingSource.getBooking(userId);
     update();
   }
