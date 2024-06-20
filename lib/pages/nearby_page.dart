@@ -5,6 +5,7 @@ import 'package:hayy_hotelio_app/models/hotel_model.dart';
 import 'package:hayy_hotelio_app/pages/widgets/category_item.dart';
 import 'package:hayy_hotelio_app/pages/widgets/custom_textformfield.dart';
 import 'package:hayy_hotelio_app/pages/widgets/hotel_item.dart';
+import 'package:hayy_hotelio_app/services/session_service.dart';
 import 'package:hayy_hotelio_app/shared/style.dart';
 
 class NearbyPage extends StatelessWidget {
@@ -19,7 +20,7 @@ class NearbyPage extends StatelessWidget {
         child: Column(
           children: [
             // Header
-            header(),
+            header(context),
             // Search bar
             searchBar(),
             // Category tab
@@ -32,20 +33,48 @@ class NearbyPage extends StatelessWidget {
     );
   }
 
-  Widget header() {
+  Widget header(BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(top: 30),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           // Profile image
-          Container(
-            width: 55,
-            height: 55,
-            decoration: const BoxDecoration(
-              shape: BoxShape.circle,
-              image: DecorationImage(
-                image: AssetImage('assets/images/img_profile.png'),
+          GestureDetector(
+            onTap: () {
+              showMenu(
+                context: context,
+                position: const RelativeRect.fromLTRB(16, 16, 0, 0),
+                items: [
+                  PopupMenuItem(
+                    value: 'logout',
+                    child: Text(
+                      'Logout',
+                      style: blackTextStyle,
+                    ),
+                  ),
+                ],
+              ).then(
+                (value) {
+                  if (value == 'logout') {
+                    SessionService.clearUser();
+                    Navigator.pushNamedAndRemoveUntil(
+                      context,
+                      '/sign-in',
+                      (_) => false,
+                    );
+                  }
+                },
+              );
+            },
+            child: Container(
+              width: 55,
+              height: 55,
+              decoration: const BoxDecoration(
+                shape: BoxShape.circle,
+                image: DecorationImage(
+                  image: AssetImage('assets/images/img_profile.png'),
+                ),
               ),
             ),
           ),
