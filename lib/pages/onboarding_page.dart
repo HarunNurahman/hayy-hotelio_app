@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:hayy_hotelio_app/pages/widgets/custom_button.dart';
-import 'package:hayy_hotelio_app/shared/style.dart';
+import 'package:hayy_hotelio_app/shared/styles.dart';
 
 class OnboardingPage extends StatelessWidget {
   const OnboardingPage({super.key});
@@ -11,7 +10,7 @@ class OnboardingPage extends StatelessWidget {
     return Scaffold(
       body: Stack(
         children: [
-          // Background image
+          // Image background
           Container(
             width: double.infinity,
             height: double.infinity,
@@ -22,29 +21,32 @@ class OnboardingPage extends StatelessWidget {
               ),
             ),
           ),
-          // Gradient background color
+          // Gradient background
           Container(
             width: double.infinity,
             height: double.infinity,
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [Colors.transparent, blackColor],
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
+                colors: [
+                  Colors.transparent,
+                  blackColor.withOpacity(0.8),
+                ],
               ),
             ),
           ),
-          // Onboarding content
+          // Content
           Align(
-            alignment: Alignment.bottomCenter,
+            alignment: Alignment.bottomLeft,
             child: Container(
               margin: const EdgeInsets.symmetric(horizontal: 30, vertical: 50),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Text(
-                    'Your Great Life Starts Here',
+                    'Your Great Life\nStarts Here',
                     style: whiteTextStyle.copyWith(
                       fontSize: 36,
                       fontWeight: bold,
@@ -56,17 +58,16 @@ class OnboardingPage extends StatelessWidget {
                     style: whiteTextStyle.copyWith(fontSize: 16),
                   ),
                   const SizedBox(height: 50),
-                  // Button
                   CustomButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/sign-in');
+                    },
                     text: 'Get Started',
-                    width: double.infinity,
-                    height: 50,
-                    onTap: () => Get.toNamed('/sign-in'),
                   ),
                 ],
               ),
             ),
-          )
+          ),
         ],
       ),
     );

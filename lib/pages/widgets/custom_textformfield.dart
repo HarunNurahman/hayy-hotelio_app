@@ -1,46 +1,41 @@
 import 'package:flutter/material.dart';
-import 'package:hayy_hotelio_app/shared/style.dart';
+import 'package:hayy_hotelio_app/shared/styles.dart';
 
 class CustomTextFormField extends StatelessWidget {
-  final String hintText;
-  final bool obsecureText;
-  final bool isSearchOn;
-  final TextEditingController? textController;
-  final VoidCallback? onTap;
+  final bool isObsecure;
+  final String hint;
+  final TextInputType? keyboardType;
+  final TextEditingController? controller;
+
   const CustomTextFormField({
     super.key,
-    required this.hintText,
-    this.isSearchOn = false,
-    this.onTap,
-    this.textController,
-    this.obsecureText = false,
+    this.isObsecure = false,
+    required this.hint,
+    this.keyboardType = TextInputType.text,
+    this.controller,
   });
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      validator: (value) => value == '' ? 'Field cannot be empty' : null, 
-      controller: textController,
-      obscureText: obsecureText,
-      style: blackTextStyle.copyWith(
-        fontSize: 14,
-        fontWeight: medium,
-      ),
+      controller: controller,
+      keyboardType: keyboardType,
+      obscureText: isObsecure,
+      cursorColor: blackColor,
+      style: blackTextStyle.copyWith(fontSize: 14, fontWeight: medium),
       decoration: InputDecoration(
         isDense: true,
-        hintText: hintText,
-        hintStyle: grayTextStyle,
-        counterText: '',
-        contentPadding: const EdgeInsets.symmetric(
-          vertical: 14,
-          horizontal: 20,
-        ),
         filled: true,
         fillColor: whiteColor,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(50),
+        hintText: hint,
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 20,
+          vertical: 14,
         ),
-        enabledBorder: OutlineInputBorder(
+        hintStyle: grayTextStyle.copyWith(
+          color: const Color(0xFFC0C0C0),
+        ),
+        border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(50),
           borderSide: BorderSide(color: whiteColor),
         ),
@@ -48,22 +43,10 @@ class CustomTextFormField extends StatelessWidget {
           borderRadius: BorderRadius.circular(50),
           borderSide: BorderSide(color: darkGrayColor),
         ),
-        suffixIcon: isSearchOn
-            ? GestureDetector(
-                onTap: onTap,
-                child: Container(
-                  width: 50,
-                  height: 50,
-                  decoration: const BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage(
-                        'assets/icons/ic_search.png',
-                      ),
-                    ),
-                  ),
-                ),
-              )
-            : null,
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(50),
+          borderSide: BorderSide(color: whiteColor),
+        ),
       ),
     );
   }
