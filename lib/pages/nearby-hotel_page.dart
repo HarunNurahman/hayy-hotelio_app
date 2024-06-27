@@ -11,7 +11,7 @@ class NearbyHotelPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: ListView(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 30),
+        padding: const EdgeInsets.only(left: 24, right: 24, top: 30),
         children: [
           // Header
           header(),
@@ -20,18 +20,7 @@ class NearbyHotelPage extends StatelessWidget {
           // Hotel category
           hotelCategory(),
           // Hotel list
-          Container(
-            margin: const EdgeInsets.only(top: 30),
-            child: Column(
-              children: [
-                HotelItem(),
-                HotelItem(),
-                HotelItem(),
-                HotelItem(),
-                HotelItem(),
-              ],
-            ),
-          )
+          hotelList(context),
         ],
       ),
     );
@@ -109,6 +98,44 @@ class NearbyHotelPage extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget hotelList(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(top: 30),
+      child: Column(
+        children: [
+          HotelItem(
+            onTap: () => Navigator.pushNamed(context, '/detail-hotel'),
+            hotel: 'Silverstone',
+            price: '1500',
+            rating: 4.2,
+            imgUrl: 'assets/images/img_hotel_1.png',
+          ),
+          HotelItem(
+            onTap: () {},
+            hotel: 'Brown Stay',
+            price: '950',
+            rating: 3.2,
+            imgUrl: 'assets/images/img_hotel_2.png',
+          ),
+          HotelItem(
+            onTap: () {},
+            hotel: 'Angga Nest',
+            price: '5300',
+            rating: 4.9,
+            imgUrl: 'assets/images/img_hotel_3.png',
+          ),
+          HotelItem(
+            onTap: () {},
+            hotel: 'Weeknd',
+            price: '25',
+            rating: 3.5,
+            imgUrl: 'assets/images/img_hotel_4.png',
+          ),
+        ],
       ),
     );
   }
