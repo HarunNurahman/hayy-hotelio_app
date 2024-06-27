@@ -3,6 +3,7 @@ import 'package:hayy_hotelio_app/shared/styles.dart';
 
 class CustomTextFormField extends StatelessWidget {
   final bool isObsecure;
+  final bool isSearchOn;
   final String hint;
   final TextInputType? keyboardType;
   final TextEditingController? controller;
@@ -10,6 +11,7 @@ class CustomTextFormField extends StatelessWidget {
   const CustomTextFormField({
     super.key,
     this.isObsecure = false,
+    this.isSearchOn = false,
     required this.hint,
     this.keyboardType = TextInputType.text,
     this.controller,
@@ -28,6 +30,9 @@ class CustomTextFormField extends StatelessWidget {
         filled: true,
         fillColor: whiteColor,
         hintText: hint,
+        suffixIcon: isSearchOn
+            ? Image.asset('assets/icons/ic_search.png', width: 50)
+            : null,
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 20,
           vertical: 14,

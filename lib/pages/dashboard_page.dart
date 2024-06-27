@@ -30,34 +30,37 @@ class DashboardPage extends StatelessWidget {
       builder: (context, state) {
         return Scaffold(
           body: bodyItems[state.tabIndex],
-          bottomNavigationBar: BottomNavigationBar(
-            currentIndex: state.tabIndex,
-            elevation: 0,
-            type: BottomNavigationBarType.fixed,
-            backgroundColor: Colors.transparent,
-            selectedItemColor: blackColor,
-            unselectedItemColor: grayColor,
-            selectedLabelStyle: blackTextStyle.copyWith(
-              fontSize: 12,
-              fontWeight: semiBold,
+          bottomNavigationBar: SizedBox(
+            height: 80,
+            child: BottomNavigationBar(
+              currentIndex: state.tabIndex,
+              elevation: 0,
+              type: BottomNavigationBarType.fixed,
+              backgroundColor: lightGrayColor,
+              selectedItemColor: blackColor,
+              unselectedItemColor: grayColor,
+              selectedLabelStyle: blackTextStyle.copyWith(
+                fontSize: 12,
+                fontWeight: semiBold,
+              ),
+              items: navItems.map((item) {
+                return BottomNavigationBarItem(
+                  icon: Image.asset(
+                    item['icon'],
+                    width: 24,
+                    color: navItems.indexOf(item) == state.tabIndex
+                        ? greenColor
+                        : grayColor,
+                  ),
+                  label: item['title'],
+                );
+              }).toList(),
+              onTap: (index) {
+                BlocProvider.of<DashboardBloc>(context).add(
+                  ChangeTabEvent(index),
+                );
+              },
             ),
-            items: navItems.map((item) {
-              return BottomNavigationBarItem(
-                icon: Image.asset(
-                  item['icon'],
-                  width: 24,
-                  color: navItems.indexOf(item) == state.tabIndex
-                      ? greenColor
-                      : grayColor,
-                ),
-                label: item['title'],
-              );
-            }).toList(),
-            onTap: (index) {
-              BlocProvider.of<DashboardBloc>(context).add(
-                ChangeTabEvent(index),
-              );
-            },
           ),
         );
       },

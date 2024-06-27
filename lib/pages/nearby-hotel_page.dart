@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:hayy_hotelio_app/pages/widgets/category_item.dart';
+import 'package:hayy_hotelio_app/pages/widgets/custom_textformfield.dart';
+import 'package:hayy_hotelio_app/pages/widgets/hotel_item.dart';
+import 'package:hayy_hotelio_app/shared/styles.dart';
 
 class NearbyHotelPage extends StatelessWidget {
   const NearbyHotelPage({super.key});
@@ -6,8 +10,105 @@ class NearbyHotelPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Text('Nearby Hotel Page'),
+      body: ListView(
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 30),
+        children: [
+          // Header
+          header(),
+          // Search bar
+          searchBar(),
+          // Hotel category
+          hotelCategory(),
+          // Hotel list
+          Container(
+            margin: const EdgeInsets.only(top: 30),
+            child: Column(
+              children: [
+                HotelItem(),
+                HotelItem(),
+                HotelItem(),
+                HotelItem(),
+                HotelItem(),
+              ],
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget header() {
+    return Container(
+      margin: const EdgeInsets.only(top: 30),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          // Image profile
+          Container(
+            width: 55,
+            height: 55,
+            decoration: const BoxDecoration(
+              shape: BoxShape.circle,
+              image: DecorationImage(
+                image: AssetImage('assets/images/img_profile.png'),
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(
+                'Near Me',
+                style: blackTextStyle.copyWith(
+                  fontSize: 24,
+                  fontWeight: bold,
+                ),
+              ),
+              Text('189 Hotels', style: grayTextStyle)
+            ],
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget searchBar() {
+    return Container(
+      margin: const EdgeInsets.only(top: 30),
+      child: CustomTextFormField(
+        hint: 'Search by name',
+        isSearchOn: true,
+      ),
+    );
+  }
+
+  Widget hotelCategory() {
+    return Container(
+      margin: const EdgeInsets.only(top: 30),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          children: [
+            CategoryItem(
+              title: 'All Place',
+              onTap: () {},
+              isSelected: true,
+            ),
+            CategoryItem(
+              title: 'Industrial',
+              onTap: () {},
+            ),
+            CategoryItem(
+              title: 'Village',
+              onTap: () {},
+            ),
+            CategoryItem(
+              title: 'Resort',
+              onTap: () {},
+            ),
+          ],
+        ),
       ),
     );
   }
