@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:hayy_hotelio_app/pages/checkout_page.dart';
 import 'package:hayy_hotelio_app/pages/widgets/activity_item.dart';
+import 'package:hayy_hotelio_app/pages/widgets/custom_button.dart';
 import 'package:hayy_hotelio_app/pages/widgets/facility_item.dart';
 import 'package:hayy_hotelio_app/shared/styles.dart';
 
@@ -10,6 +12,7 @@ class DetailHotelPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Hotel Details')),
+      bottomNavigationBar: bottomNav(context),
       // Body content
       body: Container(
         margin: const EdgeInsets.only(top: 30),
@@ -17,7 +20,10 @@ class DetailHotelPage extends StatelessWidget {
         height: double.infinity,
         decoration: BoxDecoration(
           color: whiteColor,
-          borderRadius: BorderRadius.circular(40),
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(40),
+            topRight: Radius.circular(40),
+          ),
         ),
         child: ListView(
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 30),
@@ -199,6 +205,46 @@ class DetailHotelPage extends StatelessWidget {
                 ),
               ],
             ),
+          )
+        ],
+      ),
+    );
+  }
+
+  BottomAppBar bottomNav(BuildContext context) {
+    return BottomAppBar(
+      elevation: 8,
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+      height: 80,
+      color: whiteColor,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                '\$12.900',
+                style: grayTextStyle.copyWith(
+                  fontSize: 22,
+                  fontWeight: bold,
+                  color: darkGrayColor,
+                ),
+              ),
+              const SizedBox(height: 2),
+              Text('per night', style: grayTextStyle),
+            ],
+          ),
+          CustomButton(
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const CheckoutPage(),
+              ),
+            ),
+            text: 'Booking Now',
+            width: 180,
           )
         ],
       ),
