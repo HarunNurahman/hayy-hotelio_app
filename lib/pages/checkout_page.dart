@@ -14,7 +14,7 @@ class CheckoutPage extends StatelessWidget {
         elevation: 0,
         color: Colors.transparent,
         child: CustomButton(
-          onPressed: () {},
+          onPressed: () => Navigator.pushNamed(context, '/checkout-success'),
           text: 'Proceed to Payment',
         ),
       ),

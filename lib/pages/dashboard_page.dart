@@ -36,7 +36,7 @@ class DashboardPage extends StatelessWidget {
               currentIndex: state.tabIndex,
               elevation: 0,
               type: BottomNavigationBarType.fixed,
-              backgroundColor: lightGrayColor,
+              backgroundColor: whiteColor,
               selectedItemColor: blackColor,
               unselectedItemColor: grayColor,
               selectedLabelStyle: blackTextStyle.copyWith(

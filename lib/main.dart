@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hayy_hotelio_app/bloc/dashboard/dashboard_bloc.dart';
 import 'package:hayy_hotelio_app/firebase_options.dart';
+import 'package:hayy_hotelio_app/pages/checkout-success_page.dart';
 import 'package:hayy_hotelio_app/pages/checkout_page.dart';
 import 'package:hayy_hotelio_app/pages/dashboard_page.dart';
 import 'package:hayy_hotelio_app/pages/detail-hotel_page.dart';
@@ -55,6 +56,7 @@ class MyApp extends StatelessWidget {
           '/dashboard': (context) => const DashboardPage(),
           '/detail-hotel': (context) => const DetailHotelPage(),
           '/checkout': (context) => const CheckoutPage(),
+          '/checkout-success': (context) => const CheckoutSuccessPage(),
         },
       ),
     );
