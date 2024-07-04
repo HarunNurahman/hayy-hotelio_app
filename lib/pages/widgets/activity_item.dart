@@ -15,7 +15,7 @@ class ActivityItem extends StatelessWidget {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(16),
-            child: Image.asset(
+            child: Image.network(
               imgUrl,
               width: 90,
               fit: BoxFit.cover,

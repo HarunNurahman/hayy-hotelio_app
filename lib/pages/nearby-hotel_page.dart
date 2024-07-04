@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hayy_hotelio_app/bloc/auth/auth_bloc.dart';
 import 'package:hayy_hotelio_app/bloc/hotel/hotel_bloc.dart';
+import 'package:hayy_hotelio_app/pages/detail-hotel_page.dart';
 import 'package:hayy_hotelio_app/pages/widgets/category_item.dart';
 import 'package:hayy_hotelio_app/pages/widgets/custom_textformfield.dart';
 import 'package:hayy_hotelio_app/pages/widgets/hotel_item.dart';
@@ -147,14 +148,17 @@ class _NearbyHotelPageState extends State<NearbyHotelPage> {
             margin: const EdgeInsets.only(top: 30),
             child: Column(
               children: state.hotel
-                  .map((list) => HotelItem(
-                        hotel: list,
-                        onTap: () => Navigator.pushNamed(
-                          context,
-                          '/detail-hotel',
-                          arguments: list,
+                  .map(
+                    (list) => HotelItem(
+                      hotel: list,
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => DetailHotelPage(list),
                         ),
-                      ))
+                      ),
+                    ),
+                  )
                   .toList(),
             ),
           );

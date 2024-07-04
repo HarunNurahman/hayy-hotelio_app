@@ -1,13 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hayy_hotelio_app/bloc/hotel/hotel_bloc.dart';
+import 'package:hayy_hotelio_app/models/hotel_model.dart';
 import 'package:hayy_hotelio_app/pages/checkout_page.dart';
 import 'package:hayy_hotelio_app/pages/widgets/activity_item.dart';
 import 'package:hayy_hotelio_app/pages/widgets/custom_button.dart';
 import 'package:hayy_hotelio_app/pages/widgets/facility_item.dart';
 import 'package:hayy_hotelio_app/shared/styles.dart';
 
-class DetailHotelPage extends StatelessWidget {
-  const DetailHotelPage({super.key});
+class DetailHotelPage extends StatefulWidget {
+  final HotelModel hotelData;
+  const DetailHotelPage(this.hotelData, {super.key});
 
+  @override
+  State<DetailHotelPage> createState() => _DetailHotelPageState();
+}
+
+class _DetailHotelPageState extends State<DetailHotelPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,36 +52,36 @@ class DetailHotelPage extends StatelessWidget {
   }
 
   Widget detailImage() {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(16),
-            child: Image.asset(
-              'assets/images/img_detail-hotel_1.png',
-              width: 280,
-              fit: BoxFit.cover,
+    return BlocBuilder<HotelBloc, HotelState>(
+      builder: (context, state) {
+        if (state is HotelLoading) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (state is HotelSuccess) {
+          return SizedBox(
+            height: 200,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: widget.hotelData.image!.length,
+              itemBuilder: (context, index) {
+                return Padding(
+                  padding: EdgeInsets.only(
+                    right: index == state.hotel.length - 1 ? 0 : 16,
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(16),
+                    child: Image.network(
+                      widget.hotelData.image![index],
+                      fit: BoxFit.cover,
+                      width: 280,
+                    ),
+                  ),
+                );
+              },
             ),
-          ),
-          const SizedBox(width: 18),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(16),
-            child: Image.asset(
-              'assets/images/img_detail-hotel_2.png',
-              width: 280,
-            ),
-          ),
-          const SizedBox(width: 18),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(16),
-            child: Image.asset(
-              'assets/images/img_detail-hotel_1.png',
-              width: 280,
-            ),
-          ),
-        ],
-      ),
+          );
+        }
+        return Container();
+      },
     );
   }
 
@@ -91,7 +100,7 @@ class DetailHotelPage extends StatelessWidget {
                 children: [
                   // Hotel name
                   Text(
-                    'Round O\' Park',
+                    widget.hotelData.name!,
                     style: blackTextStyle.copyWith(
                       fontSize: 22,
                       fontWeight: semiBold,
@@ -99,7 +108,7 @@ class DetailHotelPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 2),
                   // Hotel location
-                  Text('Jakarta, Indonesia', style: grayTextStyle)
+                  Text(widget.hotelData.location!, style: grayTextStyle)
                 ],
               ),
               // Hotel rating
@@ -108,7 +117,7 @@ class DetailHotelPage extends StatelessWidget {
                   Image.asset('assets/icons/ic_star_on.png', width: 24),
                   const SizedBox(width: 4),
                   Text(
-                    '4.8',
+                    widget.hotelData.rate.toString(),
                     style: blackTextStyle.copyWith(
                       fontSize: 18,
                       fontWeight: semiBold,
@@ -121,7 +130,7 @@ class DetailHotelPage extends StatelessWidget {
           const SizedBox(height: 16),
           // Hotel description
           Text(
-            'This hotel is still set in one of the most wateringly beautiful lagoons in eye off the country, a vision of broad white beaches, shape-shifting sandbag',
+            widget.hotelData.description!,
             style: blackTextStyle.copyWith(
               fontSize: 16,
             ),
@@ -189,21 +198,15 @@ class DetailHotelPage extends StatelessWidget {
           Container(
             margin: const EdgeInsets.only(top: 6),
             height: 100,
-            child: const Row(
-              children: [
-                ActivityItem(
-                  text: 'Kayak',
-                  imgUrl: 'assets/images/img_activity_1.png',
-                ),
-                ActivityItem(
-                  text: 'Climbing',
-                  imgUrl: 'assets/images/img_activity_2.png',
-                ),
-                ActivityItem(
-                  text: 'Futsal',
-                  imgUrl: 'assets/images/img_activity_3.png',
-                ),
-              ],
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: widget.hotelData.activity!.length,
+              itemBuilder: (context, index) {
+                return ActivityItem(
+                  text: widget.hotelData.activity![index]['name'],
+                  imgUrl: widget.hotelData.activity![index]['image'],
+                );
+              },
             ),
           )
         ],
@@ -225,7 +228,7 @@ class DetailHotelPage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                '\$12.900',
+                '\$${widget.hotelData.price}',
                 style: grayTextStyle.copyWith(
                   fontSize: 22,
                   fontWeight: bold,
