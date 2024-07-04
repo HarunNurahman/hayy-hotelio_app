@@ -44,7 +44,7 @@ class _SignUpPageState extends State<SignUpPage> {
           if (state is AuthSuccess) {
             Navigator.pushNamedAndRemoveUntil(
               context,
-              '/dashboard',
+              '/sign-in',
               (route) => false,
             );
           }
@@ -101,7 +101,17 @@ class _SignUpPageState extends State<SignUpPage> {
                               passwordController.text,
                             ),
                           );
-                      print('Sign up success');
+                      setState(() {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            backgroundColor: greenColor,
+                            content: Text(
+                              'Sign up success, please sign in!',
+                              style: whiteTextStyle,
+                            ),
+                          ),
+                        );
+                      });
                     }
                   },
                 ),

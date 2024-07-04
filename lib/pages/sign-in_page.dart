@@ -99,7 +99,17 @@ class _SignInPageState extends State<SignInPage> {
                               passwordController.text,
                             ),
                           );
-                      print('sign in success');
+                      setState(() {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            backgroundColor: greenColor,
+                            content: Text(
+                              'Sign in success, welcome!',
+                              style: whiteTextStyle,
+                            ),
+                          ),
+                        );
+                      });
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(

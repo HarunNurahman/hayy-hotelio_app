@@ -24,6 +24,7 @@ class SessionService {
     return user;
   }
 
+  // Menghapus session user sekaligus fungsi sign out
   static Future<bool> clearUser() async {
     final prefs = await SharedPreferences.getInstance();
     bool success = await prefs.remove('user');

@@ -55,12 +55,4 @@ class AuthService {
       rethrow;
     }
   }
-
-  Future<void> signOut() async {
-    try {
-      await auth.signOut();
-    } catch (e) {
-      rethrow;
-    }
-  }
 }

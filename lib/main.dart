@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hayy_hotelio_app/bloc/auth/auth_bloc.dart';
 import 'package:hayy_hotelio_app/bloc/dashboard/dashboard_bloc.dart';
+import 'package:hayy_hotelio_app/bloc/hotel/hotel_bloc.dart';
 import 'package:hayy_hotelio_app/firebase_options.dart';
 import 'package:hayy_hotelio_app/pages/checkout-success_page.dart';
 import 'package:hayy_hotelio_app/pages/checkout_page.dart';
@@ -35,6 +36,7 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider(create: (context) => DashboardBloc()),
         BlocProvider(create: (context) => AuthBloc()),
+        BlocProvider(create: (context) => HotelBloc()..add(GetListHotel())),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -51,18 +53,18 @@ class MyApp extends StatelessWidget {
             ),
           ),
         ),
-        initialRoute: '/',
         routes: {
           '/': (context) {
             return FutureBuilder(
-                future: SessionService.getUser(),
-                builder: (context, snapshot) {
-                  if (snapshot.data == null || snapshot.data!.id == null) {
-                    return const OnboardingPage();
-                  } else {
-                    return const DashboardPage();
-                  }
-                });
+              future: SessionService.getUser(),
+              builder: (context, snapshot) {
+                if (snapshot.data == null || snapshot.data!.id == null) {
+                  return const OnboardingPage();
+                } else {
+                  return const DashboardPage();
+                }
+              },
+            );
           },
           '/sign-in': (context) => const SignInPage(),
           '/sign-up': (context) => const SignUpPage(),

@@ -1,12 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hayy_hotelio_app/bloc/auth/auth_bloc.dart';
+import 'package:hayy_hotelio_app/bloc/hotel/hotel_bloc.dart';
 import 'package:hayy_hotelio_app/pages/widgets/category_item.dart';
 import 'package:hayy_hotelio_app/pages/widgets/custom_textformfield.dart';
 import 'package:hayy_hotelio_app/pages/widgets/hotel_item.dart';
 import 'package:hayy_hotelio_app/shared/styles.dart';
 
-class NearbyHotelPage extends StatelessWidget {
+class NearbyHotelPage extends StatefulWidget {
   const NearbyHotelPage({super.key});
 
+  @override
+  State<NearbyHotelPage> createState() => _NearbyHotelPageState();
+}
+
+class _NearbyHotelPageState extends State<NearbyHotelPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,7 +26,7 @@ class NearbyHotelPage extends StatelessWidget {
           // Search bar
           searchBar(),
           // Hotel category
-          hotelCategory(),
+          hotelCategory(context),
           // Hotel list
           hotelList(context),
         ],
@@ -27,38 +35,63 @@ class NearbyHotelPage extends StatelessWidget {
   }
 
   Widget header() {
-    return Container(
-      margin: const EdgeInsets.only(top: 30),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          // Image profile
-          Container(
-            width: 55,
-            height: 55,
-            decoration: const BoxDecoration(
-              shape: BoxShape.circle,
-              image: DecorationImage(
-                image: AssetImage('assets/images/img_profile.png'),
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text(
-                'Near Me',
-                style: blackTextStyle.copyWith(
-                  fontSize: 24,
-                  fontWeight: bold,
+    return BlocBuilder<HotelBloc, HotelState>(
+      builder: (context, state) {
+        if (state is HotelLoading) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (state is HotelSuccess) {
+          return Container(
+            margin: const EdgeInsets.only(top: 30),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                // Image profile
+                GestureDetector(
+                  onTap: () {
+                    context.read<AuthBloc>().add(AuthSignOut());
+                    setState(() {
+                      Navigator.pushNamedAndRemoveUntil(
+                        context,
+                        '/sign-in',
+                        (route) => false,
+                      );
+                    });
+                  },
+                  child: Container(
+                    width: 55,
+                    height: 55,
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      image: DecorationImage(
+                        image: AssetImage('assets/images/img_profile.png'),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
                 ),
-              ),
-              Text('189 Hotels', style: grayTextStyle)
-            ],
-          )
-        ],
-      ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      'Near Me',
+                      style: blackTextStyle.copyWith(
+                        fontSize: 24,
+                        fontWeight: bold,
+                      ),
+                    ),
+                    // Mengambil data jumlah hotel yang ada pada collection 'hotel'
+                    Text(
+                      '${state.hotel.length} Hotel',
+                      style: grayTextStyle,
+                    )
+                  ],
+                ),
+              ],
+            ),
+          );
+        }
+        return Text(state.toString());
+      },
     );
   }
 
@@ -72,7 +105,7 @@ class NearbyHotelPage extends StatelessWidget {
     );
   }
 
-  Widget hotelCategory() {
+  Widget hotelCategory(BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(top: 30),
       child: SingleChildScrollView(
@@ -103,40 +136,31 @@ class NearbyHotelPage extends StatelessWidget {
   }
 
   Widget hotelList(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(top: 30),
-      child: Column(
-        children: [
-          HotelItem(
-            onTap: () => Navigator.pushNamed(context, '/detail-hotel'),
-            hotel: 'Silverstone',
-            price: '1500',
-            rating: 4.2,
-            imgUrl: 'assets/images/img_hotel_1.png',
-          ),
-          HotelItem(
-            onTap: () {},
-            hotel: 'Brown Stay',
-            price: '950',
-            rating: 3.2,
-            imgUrl: 'assets/images/img_hotel_2.png',
-          ),
-          HotelItem(
-            onTap: () {},
-            hotel: 'Angga Nest',
-            price: '5300',
-            rating: 4.9,
-            imgUrl: 'assets/images/img_hotel_3.png',
-          ),
-          HotelItem(
-            onTap: () {},
-            hotel: 'Weeknd',
-            price: '25',
-            rating: 3.5,
-            imgUrl: 'assets/images/img_hotel_4.png',
-          ),
-        ],
-      ),
+    return BlocBuilder<HotelBloc, HotelState>(
+      builder: (context, state) {
+        if (state is HotelLoading) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        if (state is HotelSuccess) {
+          return Container(
+            margin: const EdgeInsets.only(top: 30),
+            child: Column(
+              children: state.hotel
+                  .map((list) => HotelItem(
+                        hotel: list,
+                        onTap: () => Navigator.pushNamed(
+                          context,
+                          '/detail-hotel',
+                          arguments: list,
+                        ),
+                      ))
+                  .toList(),
+            ),
+          );
+        }
+        return Container();
+      },
     );
   }
 }

@@ -1,21 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:hayy_hotelio_app/models/hotel_model.dart';
 import 'package:hayy_hotelio_app/shared/styles.dart';
 
 class HotelItem extends StatelessWidget {
-  final String hotel;
-  final String price;
-  final double rating;
-  final String imgUrl;
+  final HotelModel hotel;
   final VoidCallback? onTap;
-  const HotelItem({
-    super.key,
-    required this.hotel,
-    required this.price,
-    required this.rating,
-    required this.imgUrl,
-    this.onTap,
-  });
+
+  const HotelItem({super.key, required this.hotel, this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +32,7 @@ class HotelItem extends StatelessWidget {
                 height: 180,
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                    image: AssetImage(imgUrl),
+                    image: NetworkImage(hotel.cover!),
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -57,7 +49,7 @@ class HotelItem extends StatelessWidget {
                     children: [
                       // Hotel name
                       Text(
-                        hotel,
+                        hotel.name!,
                         style: blackTextStyle.copyWith(
                           fontSize: 18,
                           fontWeight: semiBold,
@@ -73,7 +65,7 @@ class HotelItem extends StatelessWidget {
                               style: grayTextStyle,
                             ),
                             TextSpan(
-                              text: '\$$price',
+                              text: '\$${hotel.price}',
                               style: grayTextStyle.copyWith(
                                 color: darkGrayColor,
                                 fontWeight: semiBold,
@@ -92,7 +84,7 @@ class HotelItem extends StatelessWidget {
                   RatingBar.builder(
                     minRating: 0,
                     maxRating: 5,
-                    initialRating: rating,
+                    initialRating: hotel.rate!,
                     itemSize: 16,
                     itemPadding: const EdgeInsets.only(right: 4),
                     allowHalfRating: true,
