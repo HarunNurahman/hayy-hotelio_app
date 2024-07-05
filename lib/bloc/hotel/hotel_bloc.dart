@@ -18,16 +18,6 @@ class HotelBloc extends Bloc<HotelEvent, HotelState> {
           emit(HotelError(e.toString()));
         }
       }
-
-      if (event is GetHotelCategory) {
-        try {
-          emit(HotelLoading());
-          final categoryList = await HotelService().getHotelByCategory(
-            event.category,
-          );
-          emit(HotelSuccess(categoryList));
-        } catch (e) {}
-      }
     });
   }
 }
