@@ -99,7 +99,7 @@ class _NearbyHotelPageState extends State<NearbyHotelPage> {
   Widget searchBar() {
     return Container(
       margin: const EdgeInsets.only(top: 30),
-      child: CustomTextFormField(
+      child: const CustomTextFormField(
         hint: 'Search by name',
         isSearchOn: true,
       ),
@@ -107,32 +107,34 @@ class _NearbyHotelPageState extends State<NearbyHotelPage> {
   }
 
   Widget hotelCategory(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(top: 30),
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          children: [
-            CategoryItem(
-              title: 'All Place',
-              onTap: () {},
-              isSelected: true,
+    return BlocBuilder<HotelBloc, HotelState>(
+      builder: (context, state) {
+        if (state is HotelLoading) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (state is HotelSuccess) {
+          return Container(
+            margin: const EdgeInsets.only(top: 30),
+            height: 50,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: state.hotel.length,
+              itemBuilder: (context, index) {
+                return CategoryItem(
+                  title: state.hotel[index].category!,
+                  isSelected: index == 0 ? true : false,
+                  onTap: () {
+                    setState(() {});
+                    context.read<HotelBloc>().add(
+                          GetHotelCategory(state.hotel[index].category!),
+                        );
+                  },
+                );
+              },
             ),
-            CategoryItem(
-              title: 'Industrial',
-              onTap: () {},
-            ),
-            CategoryItem(
-              title: 'Village',
-              onTap: () {},
-            ),
-            CategoryItem(
-              title: 'Resort',
-              onTap: () {},
-            ),
-          ],
-        ),
-      ),
+          );
+        }
+        return Container();
+      },
     );
   }
 

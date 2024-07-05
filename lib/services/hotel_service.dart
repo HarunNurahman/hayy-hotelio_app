@@ -16,4 +16,12 @@ class HotelService {
         await FirebaseFirestore.instance.collection('hotel').doc(id).get();
     return HotelModel.fromJson(doc.data()!);
   }
+
+  Future<List<HotelModel>> getHotelByCategory(String category) async {
+    var list = await FirebaseFirestore.instance
+        .collection('hotel')
+        .where('category', isEqualTo: category)
+        .get();
+    return list.docs.map((e) => HotelModel.fromJson(e.data())).toList();
+  }
 }
