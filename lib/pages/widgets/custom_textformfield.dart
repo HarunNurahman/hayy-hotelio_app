@@ -6,13 +6,17 @@ class CustomTextFormField extends StatelessWidget {
   final bool isObsecure;
   final String hintText;
   final TextInputType textInputType;
+  final bool isSearchOn;
+  final VoidCallback? onTap;
 
   const CustomTextFormField({
     super.key,
-    required this.controller,
+    this.controller,
     this.isObsecure = false,
     this.textInputType = TextInputType.text,
     required this.hintText,
+    this.isSearchOn = false,
+    this.onTap,
   });
 
   @override
@@ -47,6 +51,12 @@ class CustomTextFormField extends StatelessWidget {
           borderRadius: BorderRadius.circular(50),
           borderSide: BorderSide(color: redColor),
         ),
+        suffixIcon: isSearchOn
+            ? GestureDetector(
+                onTap: onTap,
+                child: Image.asset('assets/icons/ic_search.png', width: 50),
+              )
+            : null,
       ),
     );
   }

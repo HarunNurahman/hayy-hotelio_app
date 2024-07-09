@@ -3,8 +3,8 @@ import 'package:hayy_hotelio_app/pages/widgets/custom_button.dart';
 import 'package:hayy_hotelio_app/pages/widgets/custom_textformfield.dart';
 import 'package:hayy_hotelio_app/shared/styles.dart';
 
-class SignInPage extends StatelessWidget {
-  const SignInPage({super.key});
+class SignUpPage extends StatelessWidget {
+  const SignUpPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -28,11 +28,17 @@ class SignInPage extends StatelessWidget {
                 const SizedBox(height: 100),
                 // Content
                 Text(
-                  'Sign In\nTo Your Account',
+                  'Create\nNew Account',
                   style: blackTextStyle.copyWith(
                     fontSize: 18,
                     fontWeight: semiBold,
                   ),
+                ),
+                const SizedBox(height: 16),
+                // Name input
+                const CustomTextFormField(
+                  controller: null,
+                  hintText: 'Full Name',
                 ),
                 const SizedBox(height: 16),
                 // Email input
@@ -49,19 +55,19 @@ class SignInPage extends StatelessWidget {
                   isObsecure: true,
                 ),
                 const SizedBox(height: 30),
-                // Sign in button
+                // Sign up button
                 CustomButton(
-                  text: 'Sign In',
-                  onPressed: () => Navigator.pushNamed(context, '/dashboard'),
+                  text: 'Sign Up',
+                  onPressed: () => Navigator.pushNamed(context, '/sign-in'),
                 ),
                 const SizedBox(height: 30),
-                // Sign up button
+                // Sign in button
                 Center(
                   child: TextButton(
-                    onPressed: () => Navigator.pushNamed(context, '/sign-up'),
+                    onPressed: () => Navigator.pushNamed(context, '/sign-in'),
                     style: TextButton.styleFrom(padding: EdgeInsets.zero),
                     child: Text(
-                      'Create New Account',
+                      'Sign In to My Account',
                       style: grayTextStyle.copyWith(
                         fontSize: 16,
                         fontWeight: medium,
