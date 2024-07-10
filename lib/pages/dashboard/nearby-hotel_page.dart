@@ -20,7 +20,7 @@ class NearbyHotelPage extends StatelessWidget {
           // Category tab
           categoryTab(),
           // Hotel list
-          hotelList(),
+          hotelList(context),
         ],
       ),
     );
@@ -89,13 +89,14 @@ class NearbyHotelPage extends StatelessWidget {
     );
   }
 
-  Widget hotelList() {
+  Widget hotelList(BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(top: 30),
-      child: const Column(
+      child: Column(
         children: [
           // Hotel list item
           HotelItem(
+            onTap: () => Navigator.pushNamed(context, '/hotel-details'),
             imgUrl: 'assets/images/img_hotel_1.png',
             name: 'Silverstone',
             price: 1550,
