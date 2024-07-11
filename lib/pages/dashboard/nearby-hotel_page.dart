@@ -13,7 +13,7 @@ class NearbyHotelPage extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 30),
         children: [
-          // Header section (profile image, jumlah hotel terdekat)
+          // Header (profile image, jumlah hotel terdekat)
           header(),
           // Search bar
           searchBar(),

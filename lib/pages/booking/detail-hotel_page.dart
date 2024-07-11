@@ -11,7 +11,7 @@ class DetailHotelPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Hotel Details')),
-      bottomNavigationBar: bottomNavBar(),
+      bottomNavigationBar: bottomNavBar(context),
       // Content box
       body: Container(
         margin: const EdgeInsets.only(top: 30),
@@ -196,18 +196,18 @@ class DetailHotelPage extends StatelessWidget {
           ),
           const SizedBox(height: 6),
           // Activity item
-          Row(
+          const Row(
             children: [
               ActivityItem(
                 imgUrl: 'assets/images/img_activity_1.png',
                 name: 'Kayak',
               ),
-              const SizedBox(width: 16),
+              SizedBox(width: 16),
               ActivityItem(
                 imgUrl: 'assets/images/img_activity_2.png',
                 name: 'Climbing',
               ),
-              const SizedBox(width: 16),
+              SizedBox(width: 16),
               ActivityItem(
                 imgUrl: 'assets/images/img_activity_3.png',
                 name: 'Futsal',
@@ -219,7 +219,7 @@ class DetailHotelPage extends StatelessWidget {
     );
   }
 
-  Widget bottomNavBar() {
+  Widget bottomNavBar(BuildContext context) {
     return Container(
       height: 100,
       padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -250,7 +250,7 @@ class DetailHotelPage extends StatelessWidget {
           ),
           // Button
           CustomButton(
-            onPressed: () {},
+            onPressed: () => Navigator.pushNamed(context, '/checkout'),
             text: 'Booking Now',
             width: 180,
           )

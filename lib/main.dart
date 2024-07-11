@@ -5,8 +5,10 @@ import 'package:hayy_hotelio_app/bloc/dashboard/dashboard_bloc.dart';
 import 'package:hayy_hotelio_app/firebase_options.dart';
 import 'package:hayy_hotelio_app/pages/auth/sign-in_page.dart';
 import 'package:hayy_hotelio_app/pages/auth/sign-up_page.dart';
+import 'package:hayy_hotelio_app/pages/booking/checkout-success_page.dart';
+import 'package:hayy_hotelio_app/pages/booking/checkout_page.dart';
 import 'package:hayy_hotelio_app/pages/dashboard/dashboard_page.dart';
-import 'package:hayy_hotelio_app/pages/hotel/detail-hotel_page.dart';
+import 'package:hayy_hotelio_app/pages/booking/detail-hotel_page.dart';
 import 'package:hayy_hotelio_app/pages/onboarding_page.dart';
 import 'package:hayy_hotelio_app/pages/splash_page.dart';
 import 'package:hayy_hotelio_app/shared/styles.dart';
@@ -52,6 +54,8 @@ class MyApp extends StatelessWidget {
           '/sign-in': (context) => const SignInPage(),
           '/sign-up': (context) => const SignUpPage(),
           '/hotel-details': (context) => const DetailHotelPage(),
+          '/checkout': (context) => const CheckoutPage(),
+          '/checkout-success': (context) => const CheckoutSuccessPage(),
         },
       ),
     );
