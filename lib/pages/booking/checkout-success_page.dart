@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hayy_hotelio_app/bloc/dashboard/dashboard_bloc.dart';
 import 'package:hayy_hotelio_app/pages/widgets/custom_button.dart';
 import 'package:hayy_hotelio_app/shared/styles.dart';
 
@@ -41,14 +43,20 @@ class CheckoutSuccessPage extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 50),
-            CustomButton(
-              width: 210,
-              text: 'View My Booking',
-              onPressed: () => Navigator.pushNamed(
-                context,
-                '/dashboard',
-                arguments: 1,
-              ),
+            BlocBuilder<DashboardBloc, DashboardState>(
+              builder: (context, state) {
+                return CustomButton(
+                  width: 210,
+                  text: 'View My Booking',
+                  onPressed: () {
+                    context.read<DashboardBloc>().add(const OnTabChange(1));
+                    Navigator.pushNamed(
+                      context,
+                      '/dashboard',
+                    );
+                  },
+                );
+              },
             )
           ],
         ),

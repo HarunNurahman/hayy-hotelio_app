@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hayy_hotelio_app/bloc/auth/auth_bloc.dart';
 import 'package:hayy_hotelio_app/pages/widgets/category_item.dart';
 import 'package:hayy_hotelio_app/pages/widgets/custom_textformfield.dart';
 import 'package:hayy_hotelio_app/pages/widgets/hotel_item.dart';
@@ -27,36 +29,50 @@ class NearbyHotelPage extends StatelessWidget {
   }
 
   Widget header() {
-    return Container(
-      margin: const EdgeInsets.only(top: 30),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          // Profile image
-          ClipOval(
-            child: Image.asset(
-              'assets/images/img_profile.png',
-              width: 50,
-              fit: BoxFit.cover,
-            ),
-          ),
-          // Nearby hotel
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
+    return BlocBuilder<AuthBloc, AuthState>(
+      builder: (context, state) {
+        return Container(
+          margin: const EdgeInsets.only(top: 30),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                'Near Me',
-                style: blackTextStyle.copyWith(
-                  fontSize: 24,
-                  fontWeight: bold,
+              // Profile image
+              GestureDetector(
+                onTap: () {
+                  context.read<AuthBloc>().add(AuthSignOut());
+                  Navigator.pushNamedAndRemoveUntil(
+                    context,
+                    '/sign-in',
+                    (route) => false,
+                  );
+                },
+                child: ClipOval(
+                  child: Image.asset(
+                    'assets/images/img_profile.png',
+                    width: 50,
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
-              const SizedBox(height: 2),
-              Text('189 hotels', style: grayTextStyle)
+              // Nearby hotel
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    'Near Me',
+                    style: blackTextStyle.copyWith(
+                      fontSize: 24,
+                      fontWeight: bold,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text('189 hotels', style: grayTextStyle)
+                ],
+              )
             ],
-          )
-        ],
-      ),
+          ),
+        );
+      },
     );
   }
 
