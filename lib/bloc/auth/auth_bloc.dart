@@ -22,7 +22,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           // Mengirimkan state AuthSuccess dengan mengembalikan data user
           emit(AuthSuccess(user));
         } catch (e) {
-          AuthFailed(e.toString());
+          emit(AuthFailed(e.toString()));
         }
       }
 
@@ -33,14 +33,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           emit(AuthLoading());
           // Melakukan proses register
           UserModel user = await AuthService().signUp(
-            event.name,
-            event.email,
-            event.password,
+            name: event.name,
+            email: event.email,
+            password: event.password,
           );
           // Mengirimkan state AuthSuccess dengan mengembalikan data user
           emit(AuthSuccess(user));
         } catch (e) {
-          AuthFailed(e.toString());
+          emit(AuthFailed(e.toString()));
         }
       }
 
@@ -51,7 +51,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           await SessionService().deleteSession();
           emit(AuthInitial());
         } catch (e) {
-          AuthFailed(e.toString());
+          emit(AuthFailed(e.toString()));
         }
       }
     });

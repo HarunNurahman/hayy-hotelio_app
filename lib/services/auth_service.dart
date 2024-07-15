@@ -30,7 +30,11 @@ class AuthService {
   }
 
   // Fungsi sign up dari firebase authentication
-  Future<UserModel> signUp(String name, String email, String password) async {
+  Future<UserModel> signUp({
+    required String name,
+    required String email,
+    required String password,
+  }) async {
     try {
       UserCredential userCredential = await auth.createUserWithEmailAndPassword(
         email: email,

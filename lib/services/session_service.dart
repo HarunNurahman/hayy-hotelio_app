@@ -9,11 +9,14 @@ class SessionService {
     // Mendeklarasikan shared preferences
     final pref = await SharedPreferences.getInstance();
 
-    // Mengkonvertkan data user ke bentuk map
+    // Mengkonversikan data user ke bentuk map
     Map<String, dynamic> userMap = user.toJson();
 
+    // Mengonversi userMap ke dalam bentuk JSON string
+    String userJson = jsonEncode(userMap);
+
     // Menyimpan data user ke shared preferences
-    pref.setString('user', userMap.toString());
+    pref.setString('user', userJson);
   }
 
   Future<UserModel> getSession() async {
