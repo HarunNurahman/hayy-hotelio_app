@@ -13,6 +13,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       // Jika event AuthSignIn dijalankan
       if (event is AuthSignIn) {
         try {
+          emit(AuthLoading());
           // Melakukan proses login
           UserModel user = await AuthService().signIn(
             event.email,

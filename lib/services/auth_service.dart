@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hayy_hotelio_app/models/user_model.dart';
+import 'package:hayy_hotelio_app/services/session_service.dart';
 import 'package:hayy_hotelio_app/services/user_service.dart';
 
 class AuthService {
@@ -18,7 +19,10 @@ class AuthService {
       String uid = userCredential.user!.uid;
       // Mengambil data user berdasarkan id untuk dikembalikan ke UserModel
       UserModel user = await UserService().getUserbyId(uid);
+      // Menyimpan user session
+      SessionService().saveSession(user);
 
+      // Mengembalikan data user
       return user;
     } catch (e) {
       rethrow;

@@ -12,10 +12,14 @@ import 'package:hayy_hotelio_app/pages/dashboard/dashboard_page.dart';
 import 'package:hayy_hotelio_app/pages/booking/detail-hotel_page.dart';
 import 'package:hayy_hotelio_app/pages/onboarding_page.dart';
 import 'package:hayy_hotelio_app/pages/splash_page.dart';
+import 'package:hayy_hotelio_app/services/bloc_observer.dart';
+import 'package:hayy_hotelio_app/services/session_service.dart';
 import 'package:hayy_hotelio_app/shared/styles.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  Bloc.observer = SimpleBlocObserver();
+
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -30,8 +34,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (context) => DashboardBloc()),
-        BlocProvider(create: (context) => AuthBloc())
+        BlocProvider<DashboardBloc>(create: (context) => DashboardBloc()),
+        BlocProvider<AuthBloc>(create: (context) => AuthBloc())
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -51,7 +55,19 @@ class MyApp extends StatelessWidget {
         initialRoute: '/',
         routes: {
           '/': (context) => const SplashPage(),
-          '/onboarding': (context) => const OnboardingPage(),
+          // Apabila session ada, langsung ke dashboard
+          '/onboarding': (context) {
+            return FutureBuilder(
+              future: SessionService().getSession(),
+              builder: (context, snapshot) {
+                if (snapshot.data == null || snapshot.data!.id == null) {
+                  return const OnboardingPage();
+                } else {
+                  return const DashboardPage();
+                }
+              },
+            );
+          },
           '/dashboard': (context) => const DashboardPage(),
           '/sign-in': (context) => const SignInPage(),
           '/sign-up': (context) => const SignUpPage(),

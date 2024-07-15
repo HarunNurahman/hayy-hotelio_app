@@ -24,35 +24,48 @@ class _SignInPageState extends State<SignInPage> {
     return Scaffold(
       body: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
-          if (state is AuthSuccess) {
-            print(state);
-            Navigator.pushNamedAndRemoveUntil(
-              context,
-              '/dashboard',
-              (route) => false,
+          if (state is AuthFailed) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                backgroundColor: redColor,
+                content: Text(
+                  state.errorMessage,
+                  style: whiteTextStyle,
+                ),
+              ),
             );
+          }
+
+          if (state is AuthLoading) {
             setState(() {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  backgroundColor: greenColor,
+                  backgroundColor: redColor,
                   content: Text(
-                    'Sign in success, welcome!',
+                    'Incorrect email or password',
                     style: whiteTextStyle,
                   ),
                 ),
               );
             });
-          } else if (state is AuthFailed) {
-            setState(() {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  backgroundColor: redColor,
-                  content: Text(state.errorMessage),
-                ),
-              );
-            });
           }
-          print(state);
+
+          if (state is AuthSuccess) {
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              '/dashboard',
+              (route) => false,
+            );
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                backgroundColor: greenColor,
+                content: Text(
+                  'Sign in success, welcome!',
+                  style: whiteTextStyle,
+                ),
+              ),
+            );
+          }
         },
         child: Form(
           key: formKey,
@@ -120,6 +133,7 @@ class _SignInPageState extends State<SignInPage> {
                       text: 'Sign In',
                       onPressed: () {
                         if (formKey.currentState!.validate()) {
+                          // print('current state: $state');
                           context.read<AuthBloc>().add(
                                 AuthSignIn(
                                   emailController.text,

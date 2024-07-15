@@ -39,8 +39,9 @@ class SessionService {
   }
 
   // Fungsi untuk menghapus user session
-  Future<void> deleteSession() async {
+  Future<bool> deleteSession() async {
     final pref = await SharedPreferences.getInstance();
-    pref.remove('user');
+    bool success = await pref.remove('user');
+    return success;
   }
 }
