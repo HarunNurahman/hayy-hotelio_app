@@ -8,6 +8,9 @@ class CustomTextFormField extends StatelessWidget {
   final TextInputType textInputType;
   final bool isSearchOn;
   final VoidCallback? onTap;
+  final String? Function(String?)? validator;
+  final String? errorMessage;
+  final String? Function(String?)? onChanged;
 
   const CustomTextFormField({
     super.key,
@@ -17,12 +20,16 @@ class CustomTextFormField extends StatelessWidget {
     required this.hintText,
     this.isSearchOn = false,
     this.onTap,
+    this.validator,
+    this.errorMessage,
+    this.onChanged,
   });
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      validator: (value) => value == '' ? 'Field cannot be empty' : null,
+      validator: validator,
+      onChanged: onChanged,
       controller: controller,
       keyboardType: textInputType,
       obscureText: isObsecure,
@@ -40,6 +47,7 @@ class CustomTextFormField extends StatelessWidget {
         ),
         hintText: hintText,
         hintStyle: grayTextStyle.copyWith(color: const Color(0xFFC0C0C0)),
+        errorText: errorMessage,
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(50),
           borderSide: BorderSide.none,
@@ -49,6 +57,10 @@ class CustomTextFormField extends StatelessWidget {
           borderSide: BorderSide(color: darkGrayColor),
         ),
         errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(50),
+          borderSide: BorderSide(color: redColor),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(50),
           borderSide: BorderSide(color: redColor),
         ),

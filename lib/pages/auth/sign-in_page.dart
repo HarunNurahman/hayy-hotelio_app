@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hayy_hotelio_app/bloc/auth/auth_bloc.dart';
 import 'package:hayy_hotelio_app/pages/widgets/custom_button.dart';
 import 'package:hayy_hotelio_app/pages/widgets/custom_textformfield.dart';
+import 'package:hayy_hotelio_app/shared/app_format.dart';
 import 'package:hayy_hotelio_app/shared/styles.dart';
 
 class SignInPage extends StatefulWidget {
@@ -15,24 +16,21 @@ class SignInPage extends StatefulWidget {
 class _SignInPageState extends State<SignInPage> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  final formKey = GlobalKey<FormState>();
+  String? _errorMessage;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocConsumer<AuthBloc, AuthState>(
+      body: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
-          if (state is AuthFailed) {
-            print(state.errorMessage);
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                backgroundColor: redColor,
-                content: Text(state.errorMessage),
-              ),
-            );
-          }
-
           if (state is AuthSuccess) {
-            print(state.user);
+            print(state);
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              '/dashboard',
+              (route) => false,
+            );
             setState(() {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
@@ -44,31 +42,21 @@ class _SignInPageState extends State<SignInPage> {
                 ),
               );
             });
-            Navigator.pushNamedAndRemoveUntil(
-              context,
-              '/dashboard',
-              (route) => false,
-            );
-          }
-        },
-        builder: (context, state) {
-          if (state is AuthLoading) {
-            return Center(
-              child: CircularProgressIndicator(
-                color: darkGrayColor,
-              ),
-            );
           } else if (state is AuthFailed) {
-            print(state.errorMessage);
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                backgroundColor: redColor,
-                content: Text(state.errorMessage),
-              ),
-            );
+            setState(() {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  backgroundColor: redColor,
+                  content: Text(state.errorMessage),
+                ),
+              );
+            });
           }
           print(state);
-          return Center(
+        },
+        child: Form(
+          key: formKey,
+          child: Center(
             child: ListView(
               shrinkWrap: true,
               padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -99,6 +87,16 @@ class _SignInPageState extends State<SignInPage> {
                       controller: emailController,
                       hintText: 'Email Address',
                       textInputType: TextInputType.emailAddress,
+                      errorMessage: _errorMessage,
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'Please enter your email address';
+                        } else if (!emailRexExp.hasMatch(value)) {
+                          return 'Please enter a valid email address';
+                        }
+
+                        return null;
+                      },
                     ),
                     const SizedBox(height: 16),
                     // Password Input
@@ -106,17 +104,30 @@ class _SignInPageState extends State<SignInPage> {
                       controller: passwordController,
                       hintText: 'Password',
                       isObsecure: true,
+                      errorMessage: _errorMessage,
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'Please enter your password';
+                          // } else if (!passwordRexExp.hasMatch(value)) {
+                          //   return 'Please enter a valid password';
+                        }
+                        return null;
+                      },
                     ),
                     const SizedBox(height: 30),
                     // Sign in button
                     CustomButton(
                       text: 'Sign In',
-                      onPressed: () => context.read<AuthBloc>().add(
-                            AuthSignIn(
-                              emailController.text,
-                              passwordController.text,
-                            ),
-                          ),
+                      onPressed: () {
+                        if (formKey.currentState!.validate()) {
+                          context.read<AuthBloc>().add(
+                                AuthSignIn(
+                                  emailController.text,
+                                  passwordController.text,
+                                ),
+                              );
+                        }
+                      },
                     ),
                     const SizedBox(height: 30),
                     // Sign up button
@@ -140,8 +151,8 @@ class _SignInPageState extends State<SignInPage> {
                 ),
               ],
             ),
-          );
-        },
+          ),
+        ),
       ),
     );
   }
