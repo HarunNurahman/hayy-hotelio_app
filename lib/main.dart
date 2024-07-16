@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hayy_hotelio_app/bloc/auth/auth_bloc.dart';
 import 'package:hayy_hotelio_app/bloc/dashboard/dashboard_bloc.dart';
+import 'package:hayy_hotelio_app/bloc/hotel/hotel_bloc.dart';
 import 'package:hayy_hotelio_app/firebase_options.dart';
 import 'package:hayy_hotelio_app/pages/auth/sign-in_page.dart';
 import 'package:hayy_hotelio_app/pages/auth/sign-up_page.dart';
@@ -35,7 +36,8 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider<DashboardBloc>(create: (context) => DashboardBloc()),
-        BlocProvider<AuthBloc>(create: (context) => AuthBloc())
+        BlocProvider<AuthBloc>(create: (context) => AuthBloc()),
+        BlocProvider(create: (context) => HotelBloc()..add(GetHotelList())),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -71,7 +73,7 @@ class MyApp extends StatelessWidget {
           '/dashboard': (context) => const DashboardPage(),
           '/sign-in': (context) => const SignInPage(),
           '/sign-up': (context) => const SignUpPage(),
-          '/hotel-details': (context) => const DetailHotelPage(),
+          // '/hotel-details': (context) => const DetailHotelPage(),
           '/checkout': (context) => const CheckoutPage(),
           '/checkout-success': (context) => const CheckoutSuccessPage(),
         },

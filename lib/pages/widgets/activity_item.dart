@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:hayy_hotelio_app/shared/styles.dart';
 
@@ -13,10 +14,11 @@ class ActivityItem extends StatelessWidget {
       children: [
         ClipRRect(
           borderRadius: BorderRadius.circular(16),
-          child: Image.asset(
-            imgUrl,
+          child: CachedNetworkImage(
+            imageUrl: imgUrl,
             width: 90,
             height: 70,
+            fit: BoxFit.cover,
           ),
         ),
         const SizedBox(height: 6),

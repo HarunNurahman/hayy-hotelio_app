@@ -1,20 +1,24 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:hayy_hotelio_app/models/hotel_model.dart';
 import 'package:hayy_hotelio_app/shared/app_format.dart';
 import 'package:hayy_hotelio_app/shared/styles.dart';
 
 class HotelItem extends StatelessWidget {
-  final String imgUrl;
-  final String name;
-  final double price;
-  final double rating;
+  // final String imgUrl;
+  // final String name;
+  // final double price;
+  // final double rating;
+  final HotelModel? hotel;
   final VoidCallback? onTap;
   const HotelItem({
     super.key,
-    required this.imgUrl,
-    required this.name,
-    required this.price,
-    required this.rating,
+    // required this.imgUrl,
+    // required this.name,
+    // required this.price,
+    // required this.rating,
+    this.hotel,
     this.onTap,
   });
 
@@ -32,19 +36,23 @@ class HotelItem extends StatelessWidget {
         child: Column(
           children: [
             // Hotel cover
-            Container(
-              height: 180,
-              decoration: BoxDecoration(
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(16),
-                  topRight: Radius.circular(16),
-                ),
-                image: DecorationImage(
-                  image: AssetImage(imgUrl),
-                  fit: BoxFit.cover,
+            CachedNetworkImage(
+              imageUrl: hotel!.cover!,
+              imageBuilder: (context, imageProvider) => Container(
+                height: 180,
+                decoration: BoxDecoration(
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(16),
+                    topRight: Radius.circular(16),
+                  ),
+                  image: DecorationImage(
+                    image: imageProvider,
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
             ),
+
             // Hotel information
             Padding(
               padding: const EdgeInsets.all(16),
@@ -57,7 +65,7 @@ class HotelItem extends StatelessWidget {
                       children: [
                         // Hotel name
                         Text(
-                          name,
+                          hotel!.name!,
                           style: blackTextStyle.copyWith(
                             fontSize: 18,
                             fontWeight: semiBold,
@@ -73,7 +81,7 @@ class HotelItem extends StatelessWidget {
                                 style: grayTextStyle,
                               ),
                               TextSpan(
-                                text: AppFormat.currency(price),
+                                text: AppFormat.currency(hotel!.price!),
                                 style: grayTextStyle.copyWith(
                                   color: darkGrayColor,
                                   fontWeight: semiBold,
@@ -91,7 +99,7 @@ class HotelItem extends StatelessWidget {
                   ),
                   // Hotel rating
                   RatingBar.builder(
-                    initialRating: rating,
+                    initialRating: hotel!.rate!,
                     itemPadding: const EdgeInsets.only(left: 5),
                     minRating: 0,
                     direction: Axis.horizontal,

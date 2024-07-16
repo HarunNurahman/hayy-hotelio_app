@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hayy_hotelio_app/bloc/auth/auth_bloc.dart';
+import 'package:hayy_hotelio_app/bloc/hotel/hotel_bloc.dart';
+import 'package:hayy_hotelio_app/pages/booking/detail-hotel_page.dart';
 import 'package:hayy_hotelio_app/pages/widgets/category_item.dart';
 import 'package:hayy_hotelio_app/pages/widgets/custom_textformfield.dart';
 import 'package:hayy_hotelio_app/pages/widgets/hotel_item.dart';
@@ -29,50 +30,39 @@ class NearbyHotelPage extends StatelessWidget {
   }
 
   Widget header() {
-    return BlocBuilder<AuthBloc, AuthState>(
-      builder: (context, state) {
-        return Container(
-          margin: const EdgeInsets.only(top: 30),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Container(
+      margin: const EdgeInsets.only(top: 30),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          // Profile image
+          GestureDetector(
+            onTap: () {},
+            child: ClipOval(
+              child: Image.asset(
+                'assets/images/img_profile.png',
+                width: 50,
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+          // Nearby hotel
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              // Profile image
-              GestureDetector(
-                onTap: () {
-                  context.read<AuthBloc>().add(AuthSignOut());
-                  Navigator.pushNamedAndRemoveUntil(
-                    context,
-                    '/sign-in',
-                    (route) => false,
-                  );
-                },
-                child: ClipOval(
-                  child: Image.asset(
-                    'assets/images/img_profile.png',
-                    width: 50,
-                    fit: BoxFit.cover,
-                  ),
+              Text(
+                'Near Me',
+                style: blackTextStyle.copyWith(
+                  fontSize: 24,
+                  fontWeight: bold,
                 ),
               ),
-              // Nearby hotel
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(
-                    'Near Me',
-                    style: blackTextStyle.copyWith(
-                      fontSize: 24,
-                      fontWeight: bold,
-                    ),
-                  ),
-                  const SizedBox(height: 2),
-                  Text('189 hotels', style: grayTextStyle)
-                ],
-              )
+              const SizedBox(height: 2),
+              Text('189 hotels', style: grayTextStyle)
             ],
-          ),
-        );
-      },
+          )
+        ],
+      ),
     );
   }
 
@@ -108,35 +98,42 @@ class NearbyHotelPage extends StatelessWidget {
   Widget hotelList(BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(top: 30),
-      child: Column(
-        children: [
-          // Hotel list item
-          HotelItem(
-            onTap: () => Navigator.pushNamed(context, '/hotel-details'),
-            imgUrl: 'assets/images/img_hotel_1.png',
-            name: 'Silverstone',
-            price: 1550,
-            rating: 5,
-          ),
-          HotelItem(
-            imgUrl: 'assets/images/img_hotel_2.png',
-            name: 'Brown Stay',
-            price: 950,
-            rating: 4,
-          ),
-          HotelItem(
-            imgUrl: 'assets/images/img_hotel_3.png',
-            name: 'Angga\' Nest',
-            price: 59,
-            rating: 3.7,
-          ),
-          HotelItem(
-            imgUrl: 'assets/images/img_hotel_4.png',
-            name: 'Weeknd',
-            price: 25,
-            rating: 5,
-          ),
-        ],
+      child: BlocBuilder<HotelBloc, HotelState>(
+        builder: (context, state) {
+          if (state is HotelLoading) {
+            return Center(
+              child: CircularProgressIndicator(color: darkGrayColor),
+            );
+          }
+
+          if (state is HotelFailed) {
+            return Center(
+              child: Text(
+                'Error Fetching Data: ${state.errorMessage}',
+                style: blackTextStyle.copyWith(fontSize: 16),
+              ),
+            );
+          }
+
+          if (state is HotelSuccess) {
+            return Column(
+              children: state.hotel
+                  .map(
+                    (element) => HotelItem(
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => DetailHotelPage(element),
+                        ),
+                      ),
+                      hotel: element,
+                    ),
+                  )
+                  .toList(),
+            );
+          }
+          return Container();
+        },
       ),
     );
   }

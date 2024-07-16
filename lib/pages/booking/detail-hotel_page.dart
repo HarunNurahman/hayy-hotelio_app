@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:hayy_hotelio_app/models/hotel_model.dart';
 import 'package:hayy_hotelio_app/pages/widgets/activity_item.dart';
 import 'package:hayy_hotelio_app/pages/widgets/custom_button.dart';
 import 'package:hayy_hotelio_app/shared/app_format.dart';
 import 'package:hayy_hotelio_app/shared/styles.dart';
 
-class DetailHotelPage extends StatelessWidget {
-  const DetailHotelPage({super.key});
+class DetailHotelPage extends StatefulWidget {
+  final HotelModel hotel;
+  const DetailHotelPage(this.hotel, {super.key});
 
+  @override
+  State<DetailHotelPage> createState() => _DetailHotelPageState();
+}
+
+class _DetailHotelPageState extends State<DetailHotelPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,28 +49,26 @@ class DetailHotelPage extends StatelessWidget {
   }
 
   Widget detailImage() {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(16),
-            child: Image.asset(
-              'assets/images/img_detail-hotel_1.png',
-              width: 280,
-              fit: BoxFit.cover,
+    return SizedBox(
+      height: 200,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: widget.hotel.image!.length,
+        itemBuilder: (context, index) {
+          return Padding(
+            padding: EdgeInsets.only(
+              right: index == widget.hotel.image!.length - 1 ? 0 : 16,
             ),
-          ),
-          const SizedBox(width: 18),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(16),
-            child: Image.asset(
-              'assets/images/img_detail-hotel_2.png',
-              width: 280,
-              fit: BoxFit.cover,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(16),
+              child: Image.network(
+                widget.hotel.image![index],
+                width: 280,
+                fit: BoxFit.cover,
+              ),
             ),
-          ),
-        ],
+          );
+        },
       ),
     );
   }
@@ -83,7 +88,7 @@ class DetailHotelPage extends StatelessWidget {
                   children: [
                     // Hotel name
                     Text(
-                      'Round O\' Park',
+                      widget.hotel.name!,
                       style: blackTextStyle.copyWith(
                         fontSize: 22,
                         fontWeight: semiBold,
@@ -91,7 +96,7 @@ class DetailHotelPage extends StatelessWidget {
                     ),
                     const SizedBox(height: 2),
                     // Hotel location
-                    Text('Jakarta, Indonesia', style: grayTextStyle),
+                    Text(widget.hotel.location!, style: grayTextStyle),
                   ],
                 ),
               ),
@@ -101,7 +106,7 @@ class DetailHotelPage extends StatelessWidget {
                   Image.asset('assets/icons/ic_star_on.png', width: 24),
                   const SizedBox(width: 4),
                   Text(
-                    '4.8',
+                    widget.hotel.rate.toString(),
                     style: blackTextStyle.copyWith(
                       fontSize: 16,
                       fontWeight: semiBold,
@@ -114,7 +119,7 @@ class DetailHotelPage extends StatelessWidget {
           const SizedBox(height: 16),
           // Hotel description
           Text(
-            'This hotel is still set in one of the most  wateringly beautiful lagoons in eye off the country, a vision of broad white beaches, shape-shifting sandbag',
+            widget.hotel.description!,
             style: blackTextStyle.copyWith(fontSize: 16, wordSpacing: 2),
             textAlign: TextAlign.justify,
           )
@@ -194,25 +199,25 @@ class DetailHotelPage extends StatelessWidget {
               fontWeight: semiBold,
             ),
           ),
-          const SizedBox(height: 6),
           // Activity item
-          const Row(
-            children: [
-              ActivityItem(
-                imgUrl: 'assets/images/img_activity_1.png',
-                name: 'Kayak',
-              ),
-              SizedBox(width: 16),
-              ActivityItem(
-                imgUrl: 'assets/images/img_activity_2.png',
-                name: 'Climbing',
-              ),
-              SizedBox(width: 16),
-              ActivityItem(
-                imgUrl: 'assets/images/img_activity_3.png',
-                name: 'Futsal',
-              ),
-            ],
+          Container(
+            margin: const EdgeInsets.only(top: 6),
+            height: 100,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: widget.hotel.activity!.length,
+              itemBuilder: (context, index) {
+                return Padding(
+                  padding: EdgeInsets.only(
+                    right: index == widget.hotel.image!.length - 1 ? 0 : 16,
+                  ),
+                  child: ActivityItem(
+                    imgUrl: widget.hotel.activity![index]['image'],
+                    name: widget.hotel.activity![index]['name'],
+                  ),
+                );
+              },
+            ),
           )
         ],
       ),

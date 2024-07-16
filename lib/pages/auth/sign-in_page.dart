@@ -37,35 +37,21 @@ class _SignInPageState extends State<SignInPage> {
             );
           }
 
-          // if (state is AuthLoading) {
-          //   setState(() {
-          //     ScaffoldMessenger.of(context).showSnackBar(
-          //       SnackBar(
-          //         backgroundColor: redColor,
-          //         content: Text(
-          //           'Incorrect email or password',
-          //           style: whiteTextStyle,
-          //         ),
-          //       ),
-          //     );
-          //   });
-          // }
-
           if (state is AuthSuccess) {
             Navigator.pushNamedAndRemoveUntil(
               context,
               '/dashboard',
               (route) => false,
             );
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                backgroundColor: greenColor,
-                content: Text(
-                  'Sign in success, welcome!',
-                  style: whiteTextStyle,
-                ),
-              ),
-            );
+            // ScaffoldMessenger.of(context).showSnackBar(
+            //   SnackBar(
+            //     backgroundColor: greenColor,
+            //     content: Text(
+            //       'Sign in success, welcome!',
+            //       style: whiteTextStyle,
+            //     ),
+            //   ),
+            // );
           }
         },
         child: Form(

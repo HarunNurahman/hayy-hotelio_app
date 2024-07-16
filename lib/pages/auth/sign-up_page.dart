@@ -43,15 +43,15 @@ class _SignUpPageState extends State<SignUpPage> {
               '/sign-in',
               (route) => false,
             );
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                backgroundColor: greenColor,
-                content: Text(
-                  'Your account has been created, you can now sign in',
-                  style: whiteTextStyle,
-                ),
-              ),
-            );
+            // ScaffoldMessenger.of(context).showSnackBar(
+            //   SnackBar(
+            //     backgroundColor: greenColor,
+            //     content: Text(
+            //       'Your account has been created, you can now sign in',
+            //       style: whiteTextStyle,
+            //     ),
+            //   ),
+            // );
           }
         },
         child: Form(
