@@ -10,7 +10,6 @@ import 'package:hayy_hotelio_app/pages/auth/sign-up_page.dart';
 import 'package:hayy_hotelio_app/pages/booking/checkout-success_page.dart';
 import 'package:hayy_hotelio_app/pages/booking/checkout_page.dart';
 import 'package:hayy_hotelio_app/pages/dashboard/dashboard_page.dart';
-import 'package:hayy_hotelio_app/pages/booking/detail-hotel_page.dart';
 import 'package:hayy_hotelio_app/pages/onboarding_page.dart';
 import 'package:hayy_hotelio_app/pages/splash_page.dart';
 import 'package:hayy_hotelio_app/services/bloc_observer.dart';
@@ -37,7 +36,7 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider<DashboardBloc>(create: (context) => DashboardBloc()),
         BlocProvider<AuthBloc>(create: (context) => AuthBloc()),
-        BlocProvider(create: (context) => HotelBloc()..add(GetHotelList())),
+        BlocProvider(create: (context) => HotelBloc()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

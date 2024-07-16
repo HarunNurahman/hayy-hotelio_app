@@ -12,19 +12,22 @@ class NearbyHotelPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: ListView(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 30),
-        children: [
-          // Header (profile image, jumlah hotel terdekat)
-          header(),
-          // Search bar
-          searchBar(),
-          // Category tab
-          categoryTab(),
-          // Hotel list
-          hotelList(context),
-        ],
+    return BlocProvider(
+      create: (context) => HotelBloc()..add(GetHotelList()),
+      child: Scaffold(
+        body: ListView(
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 30),
+          children: [
+            // Header (profile image, jumlah hotel terdekat)
+            header(),
+            // Search bar
+            searchBar(),
+            // Category tab
+            categoryTab(),
+            // Hotel list
+            hotelList(context),
+          ],
+        ),
       ),
     );
   }
@@ -78,20 +81,31 @@ class NearbyHotelPage extends StatelessWidget {
   }
 
   Widget categoryTab() {
-    return Container(
-      margin: const EdgeInsets.only(top: 30),
-      child: const SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        // Category tab item
-        child: Row(
-          children: [
-            CategoryItem(text: 'All Place', isSelected: true),
-            CategoryItem(text: 'Industrial'),
-            CategoryItem(text: 'Village'),
-            CategoryItem(text: 'Resort'),
-          ],
-        ),
-      ),
+    return BlocBuilder<HotelBloc, HotelState>(
+      builder: (context, state) {
+        if (state is HotelSuccess) {
+          return Container(
+            margin: const EdgeInsets.only(top: 30),
+            height: 45,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: state.hotel.length,
+              itemBuilder: (context, index) {
+                return CategoryItem(
+                  text: state.hotel[index].category!,
+                  isSelected: state.hotel[index].category == 'All Places',
+                  onTap: () {
+                    BlocProvider.of<HotelBloc>(context).add(
+                      GetHotelByCategory(state.hotel[index].category!),
+                    );
+                  },
+                );
+              },
+            ),
+          );
+        }
+        return Container();
+      },
     );
   }
 
