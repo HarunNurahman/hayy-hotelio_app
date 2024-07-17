@@ -7,8 +7,31 @@ import 'package:hayy_hotelio_app/pages/widgets/custom_textformfield.dart';
 import 'package:hayy_hotelio_app/pages/widgets/hotel_item.dart';
 import 'package:hayy_hotelio_app/shared/styles.dart';
 
-class NearbyHotelPage extends StatelessWidget {
+class NearbyHotelPage extends StatefulWidget {
   const NearbyHotelPage({super.key});
+
+  @override
+  State<NearbyHotelPage> createState() => _NearbyHotelPageState();
+}
+
+class _NearbyHotelPageState extends State<NearbyHotelPage> {
+  List<String> categories = ['All Place', 'Industrial', 'Village'];
+  String selectedCategory = 'All Place';
+
+  @override
+  void initState() {
+    super.initState();
+    BlocProvider.of<HotelBloc>(context).add(
+      GetHotelByCategory(selectedCategory),
+    );
+  }
+
+  void onCategorySelected(String category) {
+    setState(() {
+      selectedCategory = category;
+    });
+    BlocProvider.of<HotelBloc>(context).add(GetHotelByCategory(category));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -81,31 +104,25 @@ class NearbyHotelPage extends StatelessWidget {
   }
 
   Widget categoryTab() {
-    return BlocBuilder<HotelBloc, HotelState>(
-      builder: (context, state) {
-        if (state is HotelSuccess) {
-          return Container(
-            margin: const EdgeInsets.only(top: 30),
-            height: 45,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: state.hotel.length,
-              itemBuilder: (context, index) {
-                return CategoryItem(
-                  text: state.hotel[index].category!,
-                  isSelected: state.hotel[index].category == 'All Places',
-                  onTap: () {
-                    BlocProvider.of<HotelBloc>(context).add(
-                      GetHotelByCategory(state.hotel[index].category!),
-                    );
-                  },
-                );
-              },
-            ),
+    return Container(
+      margin: const EdgeInsets.only(top: 30),
+      height: 45,
+      width: double.infinity,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: categories.length,
+        itemBuilder: (context, index) {
+          final category = categories[index];
+          return CategoryItem(
+            text: category,
+            isSelected: selectedCategory == category ? true : false,
+            onTap: () {
+              onCategorySelected(category);
+              context.read<HotelBloc>().add(GetHotelByCategory(category));
+            },
           );
-        }
-        return Container();
-      },
+        },
+      ),
     );
   }
 

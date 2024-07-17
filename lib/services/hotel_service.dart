@@ -37,10 +37,26 @@ class HotelService {
   }
 
   Future<List<HotelModel>> getHotelByCategory(String category) async {
-    var list = await FirebaseFirestore.instance
-        .collection('hotel')
-        .where('category', isEqualTo: category)
-        .get();
-    return list.docs.map((e) => HotelModel.fromJson(e.data())).toList();
+    try {
+      QuerySnapshot snapshot;
+      if (category == 'All Place') {
+        snapshot = await FirebaseFirestore.instance.collection('hotel').get();
+      } else {
+        snapshot = await FirebaseFirestore.instance
+            .collection('hotel')
+            .where('category', isEqualTo: category)
+            .get();
+      }
+      List<HotelModel> hotels =
+          snapshot.docs.map((e) => HotelModel.fromSnapshot(e)).toList();
+      return hotels;
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+    // var list = await FirebaseFirestore.instance
+    //     .collection('hotel')
+    //     .where('category', isEqualTo: category)
+    //     .get();
+    // return list.docs.map((e) => HotelModel.fromJson(e.data())).toList();
   }
 }

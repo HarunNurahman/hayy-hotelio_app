@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class HotelModel {
   final String? id;
   final String? name;
@@ -50,4 +52,19 @@ class HotelModel {
         'image': List<dynamic>.from(image!.map((x) => x)),
         'activity': activity,
       };
+
+  factory HotelModel.fromSnapshot(DocumentSnapshot snapshot) {
+    return HotelModel(
+      id: snapshot.id,
+      name: snapshot['name'],
+      cover: snapshot['cover'],
+      description: snapshot['description'],
+      location: snapshot['location'],
+      price: snapshot['price'],
+      rate: snapshot['rate'],
+      category: snapshot['category'],
+      image: List<String>.from(snapshot['image'].map((x) => x)),
+      activity: List<Map<String, dynamic>>.from(snapshot['activity']),
+    );
+  }
 }
