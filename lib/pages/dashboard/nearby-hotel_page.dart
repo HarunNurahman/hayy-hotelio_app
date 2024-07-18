@@ -6,6 +6,7 @@ import 'package:hayy_hotelio_app/pages/widgets/category_item.dart';
 import 'package:hayy_hotelio_app/pages/widgets/custom_textformfield.dart';
 import 'package:hayy_hotelio_app/pages/widgets/hotel_item.dart';
 import 'package:hayy_hotelio_app/shared/styles.dart';
+import 'package:shimmer/shimmer.dart';
 
 class NearbyHotelPage extends StatefulWidget {
   const NearbyHotelPage({super.key});
@@ -63,46 +64,52 @@ class _NearbyHotelPageState extends State<NearbyHotelPage> {
   }
 
   Widget header() {
-    return BlocBuilder<HotelBloc, HotelState>(
-      builder: (context, state) {
-        if (state is HotelSuccess) {
-          return Container(
-            margin: const EdgeInsets.only(top: 30),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                // Profile image
-                GestureDetector(
-                  onTap: () {},
-                  child: ClipOval(
-                    child: Image.asset(
-                      'assets/images/img_profile.png',
-                      width: 50,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-                // Nearby hotel
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text(
-                      'Near Me',
-                      style: blackTextStyle.copyWith(
-                        fontSize: 24,
-                        fontWeight: bold,
-                      ),
-                    ),
-                    const SizedBox(height: 2),
-                    Text('${state.hotel.length} hotels', style: grayTextStyle)
-                  ],
-                )
-              ],
+    return Container(
+      margin: const EdgeInsets.only(top: 30),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          // Profile image
+          GestureDetector(
+            onTap: () {},
+            child: ClipOval(
+              child: Image.asset(
+                'assets/images/img_profile.png',
+                width: 50,
+                fit: BoxFit.cover,
+              ),
             ),
-          );
-        }
-        return Container();
-      },
+          ),
+          // Nearby hotel
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(
+                'Near Me',
+                style: blackTextStyle.copyWith(
+                  fontSize: 24,
+                  fontWeight: bold,
+                ),
+              ),
+              const SizedBox(height: 2),
+              BlocBuilder<HotelBloc, HotelState>(
+                builder: (context, state) {
+                  if (state is HotelSuccess) {
+                    return Text(
+                      '${state.hotel.length} hotels',
+                      style: grayTextStyle,
+                    );
+                  }
+                  return Text(
+                    ' hotels',
+                    style: grayTextStyle,
+                  );
+                },
+              )
+            ],
+          )
+        ],
+      ),
     );
   }
 
@@ -116,17 +123,32 @@ class _NearbyHotelPageState extends State<NearbyHotelPage> {
               controller: searchController,
               hintText: 'Search by name or city',
               isSearchOn: true,
+              onFieldSubmitted: (p0) {
+                searchController.text.isNotEmpty
+                    ? context
+                        .read<HotelBloc>()
+                        .add(GetHotelByName(searchController.text))
+                    : context.read<HotelBloc>().add(GetHotelList());
+                return null;
+              },
               onTap: () {
-                if (searchController.text.isNotEmpty) {
-                  context
-                      .read<HotelBloc>()
-                      .add(GetHotelByName(searchController.text));
-                }
+                searchController.text.isNotEmpty
+                    ? context
+                        .read<HotelBloc>()
+                        .add(GetHotelByName(searchController.text))
+                    : context.read<HotelBloc>().add(GetHotelList());
               },
             ),
           );
         }
-        return Container();
+        return Container(
+          margin: const EdgeInsets.only(top: 30),
+          child: CustomTextFormField(
+            controller: searchController,
+            hintText: 'Search by name or city',
+            isSearchOn: true,
+          ),
+        );
       },
     );
   }
@@ -160,8 +182,19 @@ class _NearbyHotelPageState extends State<NearbyHotelPage> {
       child: BlocBuilder<HotelBloc, HotelState>(
         builder: (context, state) {
           if (state is HotelLoading) {
-            return Center(
-              child: CircularProgressIndicator(color: darkGrayColor),
+            return Shimmer.fromColors(
+              baseColor: lightGrayColor,
+              highlightColor: grayColor,
+              child: Container(
+                width: double.infinity,
+                height: 265,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(16),
+                  gradient: LinearGradient(
+                    colors: [lightGrayColor, grayColor],
+                  ),
+                ),
+              ),
             );
           }
 
