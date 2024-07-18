@@ -17,6 +17,7 @@ class NearbyHotelPage extends StatefulWidget {
 class _NearbyHotelPageState extends State<NearbyHotelPage> {
   List<String> categories = ['All Place', 'Industrial', 'Village'];
   String selectedCategory = 'All Place';
+  TextEditingController searchController = TextEditingController();
 
   @override
   void initState() {
@@ -31,6 +32,12 @@ class _NearbyHotelPageState extends State<NearbyHotelPage> {
       selectedCategory = category;
     });
     BlocProvider.of<HotelBloc>(context).add(GetHotelByCategory(category));
+  }
+
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
   }
 
   @override
@@ -56,50 +63,71 @@ class _NearbyHotelPageState extends State<NearbyHotelPage> {
   }
 
   Widget header() {
-    return Container(
-      margin: const EdgeInsets.only(top: 30),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          // Profile image
-          GestureDetector(
-            onTap: () {},
-            child: ClipOval(
-              child: Image.asset(
-                'assets/images/img_profile.png',
-                width: 50,
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
-          // Nearby hotel
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text(
-                'Near Me',
-                style: blackTextStyle.copyWith(
-                  fontSize: 24,
-                  fontWeight: bold,
+    return BlocBuilder<HotelBloc, HotelState>(
+      builder: (context, state) {
+        if (state is HotelSuccess) {
+          return Container(
+            margin: const EdgeInsets.only(top: 30),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                // Profile image
+                GestureDetector(
+                  onTap: () {},
+                  child: ClipOval(
+                    child: Image.asset(
+                      'assets/images/img_profile.png',
+                      width: 50,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
                 ),
-              ),
-              const SizedBox(height: 2),
-              Text('189 hotels', style: grayTextStyle)
-            ],
-          )
-        ],
-      ),
+                // Nearby hotel
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      'Near Me',
+                      style: blackTextStyle.copyWith(
+                        fontSize: 24,
+                        fontWeight: bold,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text('${state.hotel.length} hotels', style: grayTextStyle)
+                  ],
+                )
+              ],
+            ),
+          );
+        }
+        return Container();
+      },
     );
   }
 
   Widget searchBar() {
-    return Container(
-      margin: const EdgeInsets.only(top: 30),
-      child: CustomTextFormField(
-        hintText: 'Search by name or city',
-        isSearchOn: true,
-        onTap: () {},
-      ),
+    return BlocBuilder<HotelBloc, HotelState>(
+      builder: (context, state) {
+        if (state is HotelSuccess) {
+          return Container(
+            margin: const EdgeInsets.only(top: 30),
+            child: CustomTextFormField(
+              controller: searchController,
+              hintText: 'Search by name or city',
+              isSearchOn: true,
+              onTap: () {
+                if (searchController.text.isNotEmpty) {
+                  context
+                      .read<HotelBloc>()
+                      .add(GetHotelByName(searchController.text));
+                }
+              },
+            ),
+          );
+        }
+        return Container();
+      },
     );
   }
 

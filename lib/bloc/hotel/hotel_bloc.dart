@@ -30,6 +30,16 @@ class HotelBloc extends Bloc<HotelEvent, HotelState> {
           emit(HotelFailed(e.toString()));
         }
       }
+
+      if (event is GetHotelByName) {
+        try {
+          emit(HotelLoading());
+          final hotelName = await HotelService().getHotelByName(event.query);
+          emit(HotelSuccess(hotelName));
+        } catch (e) {
+          emit(HotelFailed(e.toString()));
+        }
+      }
     });
   }
 }

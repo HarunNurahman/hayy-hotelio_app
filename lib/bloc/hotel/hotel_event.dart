@@ -16,3 +16,11 @@ class GetHotelByCategory extends HotelEvent {
   @override
   List<Object> get props => [category];
 }
+
+class GetHotelByName extends HotelEvent {
+  final String query;
+  const GetHotelByName(this.query);
+
+  @override
+  List<Object> get props => [query];
+}

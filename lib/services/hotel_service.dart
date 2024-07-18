@@ -16,7 +16,7 @@ class HotelService {
     }
   }
 
-  // mengambil data hotel dari Firestore berdasarkan ID dokumen dan mengonversinya menjadi objek HotelModel
+  // Mengambil data hotel dari Firestore berdasarkan ID dokumen dan mengonversinya menjadi objek HotelModel
   Future<HotelModel?> getHotelById(String id) async {
     try {
       // Mengambil data dari firestore
@@ -30,6 +30,23 @@ class HotelService {
         print('No such document!');
         return null;
       }
+    } catch (e) {
+      print('Error $e');
+      rethrow;
+    }
+  }
+
+  Future<List<HotelModel>> getHotelByName(String query) async {
+    try {
+      var querySnapshot = await FirebaseFirestore.instance
+          .collection('hotel')
+          .where('name', isEqualTo: query)
+          .where('name', isLessThanOrEqualTo: '\uf8ff')
+          .get();
+
+      List<HotelModel> result =
+          querySnapshot.docs.map((e) => HotelModel.fromSnapshot(e)).toList();
+      return result;
     } catch (e) {
       print('Error $e');
       rethrow;
