@@ -28,13 +28,16 @@ class BookingService {
   // Fungsi untuk menambahkan collection dan data booking didalam collection user
   static Future<bool> addBooking(String userId, BookingModel booking) async {
     try {
+      // Mendapatkan referensi ke koleksi 'booking' dalam dokumen pengguna yang sesuai.
       var query = FirebaseFirestore.instance
           .collection('user')
           .doc(userId)
           .collection('booking');
 
+      // Menambahkan dokumen baru ke dalam koleksi 'booking'.
       var result = await query.add(booking.toJson());
 
+      // Memperbarui dokumen yang baru saja ditambahkan dengan id
       result.update({'id': result.id});
       return true;
     } catch (e) {

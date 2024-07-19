@@ -1,30 +1,66 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hayy_hotelio_app/bloc/booking/booking_bloc.dart';
+import 'package:hayy_hotelio_app/bloc/hotel/hotel_bloc.dart';
+import 'package:hayy_hotelio_app/models/hotel_model.dart';
 import 'package:hayy_hotelio_app/pages/widgets/custom_button.dart';
 import 'package:hayy_hotelio_app/shared/app_format.dart';
 import 'package:hayy_hotelio_app/shared/styles.dart';
 
-class CheckoutPage extends StatelessWidget {
-  const CheckoutPage({super.key});
+class CheckoutPage extends StatefulWidget {
+  final HotelModel hotel;
+  const CheckoutPage(this.hotel, {super.key});
 
+  @override
+  State<CheckoutPage> createState() => _CheckoutPageState();
+}
+
+class _CheckoutPageState extends State<CheckoutPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Checkout')),
-      body: ListView(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 30),
-        children: [
-          // Hotel information
-          hotelInfo(),
-          // Room detail
-          roomDetail(),
-          // Payment
-          payment(),
-          // Pay button
-          CustomButton(
-            text: 'Proceed to Payment',
-            onPressed: () => Navigator.pushNamed(context, '/checkout-success'),
-          )
-        ],
+      body: BlocConsumer<BookingBloc, BookingState>(
+        listener: (context, state) {
+          if (state is BookingSuccess) {
+            Navigator.pushNamed(context, '/checkout-success');
+          }
+
+          if (state is BookingFailed) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(state.errorMessage),
+              ),
+            );
+          }
+        },
+        builder: (context, state) {
+          return ListView(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 30),
+            children: [
+              // Hotel information
+              hotelInfo(),
+              // Room detail
+              roomDetail(),
+              // Payment
+              payment(),
+              // Pay button
+              BlocBuilder<HotelBloc, HotelState>(
+                builder: (context, state) {
+                  if (state is HotelSuccess) {
+                    return CustomButton(
+                      text: 'Proceed to Payment',
+                      onPressed: () =>
+                          Navigator.pushNamed(context, '/checkout-success'),
+                    );
+                  }
+                  return Container();
+                },
+              )
+            ],
+          );
+        },
       ),
     );
   }
@@ -42,8 +78,8 @@ class CheckoutPage extends StatelessWidget {
           // Hotel cover
           ClipRRect(
             borderRadius: BorderRadius.circular(16),
-            child: Image.asset(
-              'assets/images/img_hotel_1.png',
+            child: CachedNetworkImage(
+              imageUrl: widget.hotel.cover!,
               width: 90,
               height: 70,
               fit: BoxFit.cover,
@@ -56,14 +92,14 @@ class CheckoutPage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Round O\' Park',
+                  widget.hotel.name!,
                   style: blackTextStyle.copyWith(
                     fontSize: 16,
                     fontWeight: semiBold,
                   ),
                 ),
                 const SizedBox(height: 4),
-                Text('Jakarta, Indonesia', style: grayTextStyle)
+                Text(widget.hotel.location!, style: grayTextStyle)
               ],
             ),
           )
@@ -91,18 +127,18 @@ class CheckoutPage extends StatelessWidget {
               fontWeight: semiBold,
             ),
           ),
-          roomItem('Date', 'Mon, 22 Jan 2022'),
+          roomItem('Date', AppFormat.date(DateTime.now().toIso8601String())),
           roomItem('Guest', '1 Guest(s)'),
           roomItem('Breakfast', 'Included'),
           roomItem('Check-in Time', '14:00 WIB'),
           roomItem('Duration', '1 Night'),
           roomItem('Service Fee', AppFormat.currency(5)),
-          roomItem('Activity', AppFormat.currency(35)),
+          roomItem('Activity', AppFormat.currency(15)),
           const SizedBox(height: 10),
           Divider(height: 1, color: darkGrayColor),
           roomItem(
             'Total Payment',
-            AppFormat.currency(119),
+            AppFormat.currency(widget.hotel.price! + 5 + 15),
             color: darkGrayColor,
           ),
         ],

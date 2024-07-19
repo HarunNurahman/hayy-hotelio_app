@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hayy_hotelio_app/models/hotel_model.dart';
+import 'package:hayy_hotelio_app/pages/booking/checkout_page.dart';
 import 'package:hayy_hotelio_app/pages/widgets/activity_item.dart';
 import 'package:hayy_hotelio_app/pages/widgets/custom_button.dart';
 import 'package:hayy_hotelio_app/shared/app_format.dart';
@@ -243,7 +244,7 @@ class _DetailHotelPageState extends State<DetailHotelPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                AppFormat.currency(12900),
+                AppFormat.currency(widget.hotel.price!),
                 style: grayTextStyle.copyWith(
                   fontSize: 22,
                   fontWeight: bold,
@@ -255,7 +256,12 @@ class _DetailHotelPageState extends State<DetailHotelPage> {
           ),
           // Button
           CustomButton(
-            onPressed: () => Navigator.pushNamed(context, '/checkout'),
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => CheckoutPage(widget.hotel),
+              ),
+            ),
             text: 'Booking Now',
             width: 180,
           )
