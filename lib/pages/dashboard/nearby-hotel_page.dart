@@ -5,6 +5,7 @@ import 'package:hayy_hotelio_app/pages/booking/detail-hotel_page.dart';
 import 'package:hayy_hotelio_app/pages/widgets/category_item.dart';
 import 'package:hayy_hotelio_app/pages/widgets/custom_textformfield.dart';
 import 'package:hayy_hotelio_app/pages/widgets/hotel_item.dart';
+import 'package:hayy_hotelio_app/services/session_service.dart';
 import 'package:hayy_hotelio_app/shared/styles.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -71,7 +72,14 @@ class _NearbyHotelPageState extends State<NearbyHotelPage> {
         children: [
           // Profile image
           GestureDetector(
-            onTap: () {},
+            onTap: () {
+              SessionService().deleteSession();
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                '/login',
+                (route) => false,
+              );
+            },
             child: ClipOval(
               child: Image.asset(
                 'assets/images/img_profile.png',

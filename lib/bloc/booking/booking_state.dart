@@ -12,11 +12,12 @@ final class BookingInitial extends BookingState {}
 final class BookingLoading extends BookingState {}
 
 final class BookingSuccess extends BookingState {
+  final String userId;
   final BookingModel booking;
-  const BookingSuccess(this.booking);
+  const BookingSuccess(this.userId, this.booking);
 
   @override
-  List<Object> get props => [booking];
+  List<Object> get props => [userId, booking];
 }
 
 final class BookingFailed extends BookingState {

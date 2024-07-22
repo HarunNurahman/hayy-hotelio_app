@@ -1,16 +1,21 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hayy_hotelio_app/bloc/auth/auth_bloc.dart';
 import 'package:hayy_hotelio_app/bloc/booking/booking_bloc.dart';
-import 'package:hayy_hotelio_app/bloc/hotel/hotel_bloc.dart';
+import 'package:hayy_hotelio_app/models/booking_model.dart';
 import 'package:hayy_hotelio_app/models/hotel_model.dart';
 import 'package:hayy_hotelio_app/pages/widgets/custom_button.dart';
 import 'package:hayy_hotelio_app/shared/app_format.dart';
 import 'package:hayy_hotelio_app/shared/styles.dart';
+import 'package:intl/intl.dart';
 
 class CheckoutPage extends StatefulWidget {
   final HotelModel hotel;
-  const CheckoutPage(this.hotel, {super.key});
+  const CheckoutPage({
+    super.key,
+    required this.hotel,
+  });
 
   @override
   State<CheckoutPage> createState() => _CheckoutPageState();
@@ -19,48 +24,66 @@ class CheckoutPage extends StatefulWidget {
 class _CheckoutPageState extends State<CheckoutPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Checkout')),
-      body: BlocConsumer<BookingBloc, BookingState>(
-        listener: (context, state) {
-          if (state is BookingSuccess) {
-            Navigator.pushNamed(context, '/checkout-success');
-          }
-
-          if (state is BookingFailed) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.errorMessage),
-              ),
-            );
-          }
-        },
-        builder: (context, state) {
-          return ListView(
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 30),
-            children: [
-              // Hotel information
-              hotelInfo(),
-              // Room detail
-              roomDetail(),
-              // Payment
-              payment(),
-              // Pay button
-              BlocBuilder<HotelBloc, HotelState>(
-                builder: (context, state) {
-                  if (state is HotelSuccess) {
-                    return CustomButton(
-                      text: 'Proceed to Payment',
-                      onPressed: () =>
-                          Navigator.pushNamed(context, '/checkout-success'),
-                    );
-                  }
-                  return Container();
-                },
-              )
-            ],
-          );
-        },
+    return BlocProvider(
+      create: (context) => AuthBloc()
+        ..add(
+          GetUser('IhY6nAIZUVWx77YWSkFvs7bEyOt1'),
+        ),
+      child: Scaffold(
+        appBar: AppBar(title: const Text('Checkout')),
+        body: ListView(
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 30),
+          children: [
+            // Hotel information
+            hotelInfo(),
+            // Room detail
+            roomDetail(),
+            // Payment
+            payment(),
+            // Pay button
+            BlocBuilder<AuthBloc, AuthState>(
+              builder: (context, state) {
+                if (state is AuthSuccess) {
+                  final userId = state.user.id;
+                  return CustomButton(
+                    text: 'Proceed to Payment',
+                    onPressed: () {
+                      BlocProvider.of<BookingBloc>(context).add(
+                        AddBooking(
+                          userId!,
+                          BookingModel(
+                            id: '',
+                            idHotel: widget.hotel.id!,
+                            cover: widget.hotel.cover!,
+                            name: widget.hotel.name!,
+                            location: widget.hotel.location!,
+                            date:
+                                DateFormat('yyyy-MM-dd').format(DateTime.now()),
+                            guest: 1,
+                            breakfast: 'Included',
+                            checkInTime: '14:00 WIB',
+                            night: 1,
+                            serviceFee: 15,
+                            activity: 20,
+                            totalPayment: (widget.hotel.price! * 1) + 15 + 20,
+                            status: 'PAID',
+                            isDone: false,
+                          ),
+                        ),
+                      );
+                      Navigator.pushNamed(
+                        context,
+                        '/checkout-success',
+                        arguments: widget.hotel,
+                      );
+                    },
+                  );
+                }
+                return Container();
+              },
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -254,14 +254,16 @@ class _DetailHotelPageState extends State<DetailHotelPage> {
               Text('per night', style: grayTextStyle),
             ],
           ),
-          // Button
+          // Book button
           CustomButton(
-            onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => CheckoutPage(widget.hotel),
-              ),
-            ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => CheckoutPage(hotel: widget.hotel),
+                ),
+              );
+            },
             text: 'Booking Now',
             width: 180,
           )

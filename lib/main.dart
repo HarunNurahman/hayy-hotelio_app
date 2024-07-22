@@ -37,7 +37,7 @@ class MyApp extends StatelessWidget {
         BlocProvider<DashboardBloc>(create: (context) => DashboardBloc()),
         BlocProvider<AuthBloc>(create: (context) => AuthBloc()),
         BlocProvider<HotelBloc>(create: (context) => HotelBloc()),
-        BlocProvider<BookingBloc>(create: (context) => BookingBloc())
+        BlocProvider<BookingBloc>(create: (context) => BookingBloc()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

@@ -10,18 +10,10 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
   BookingBloc() : super(BookingInitial()) {
     on<BookingEvent>((event, emit) async {
       if (event is AddBooking) {
+        emit(BookingLoading());
         try {
-          emit(BookingLoading());
-          final success = await BookingService.addBooking(
-            event.userId,
-            event.booking,
-          );
-
-          if (success) {
-            emit(BookingSuccess(event.booking));
-          } else {
-            emit(const BookingFailed('Booking Failed}'));
-          }
+          await BookingService.addBooking(event.userId, event.booking);
+          emit(BookingSuccess(event.userId, event.booking));
         } catch (e) {
           emit(BookingFailed(e.toString()));
         }

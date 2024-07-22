@@ -26,4 +26,12 @@ class AuthSignUp extends AuthEvent {
   List<Object> get props => [name, email, password];
 }
 
+class GetUser extends AuthEvent {
+  final String userId;
+  const GetUser(this.userId);
+
+  @override
+  List<Object> get props => [userId];
+}
+
 class AuthSignOut extends AuthEvent {}
