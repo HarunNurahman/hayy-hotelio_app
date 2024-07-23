@@ -191,15 +191,15 @@ class _NearbyHotelPageState extends State<NearbyHotelPage> {
         builder: (context, state) {
           if (state is HotelLoading) {
             return Shimmer.fromColors(
-              baseColor: lightGrayColor,
-              highlightColor: grayColor,
+              baseColor: whiteColor,
+              highlightColor: lightGrayColor,
               child: Container(
                 width: double.infinity,
                 height: 265,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(16),
                   gradient: LinearGradient(
-                    colors: [lightGrayColor, grayColor],
+                    colors: [whiteColor, lightGrayColor],
                   ),
                 ),
               ),

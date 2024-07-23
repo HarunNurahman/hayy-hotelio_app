@@ -10,10 +10,23 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
   BookingBloc() : super(BookingInitial()) {
     on<BookingEvent>((event, emit) async {
       if (event is AddBooking) {
-        emit(BookingLoading());
         try {
+          emit(BookingLoading());
           await BookingService.addBooking(event.userId, event.booking);
-          emit(BookingSuccess(event.userId, event.booking));
+          List<BookingModel> bookings =
+              await BookingService.getBooking(event.userId);
+          emit(BookingSuccess(bookings));
+        } catch (e) {
+          emit(BookingFailed(e.toString()));
+        }
+      }
+
+      if (event is GetBooking) {
+        try {
+          emit(BookingLoading());
+          List<BookingModel> bookings =
+              await BookingService.getBooking(event.userId);
+          emit(BookingSuccess(bookings));
         } catch (e) {
           emit(BookingFailed(e.toString()));
         }

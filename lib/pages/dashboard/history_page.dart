@@ -1,23 +1,107 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:grouped_list/grouped_list.dart';
+import 'package:hayy_hotelio_app/bloc/auth/auth_bloc.dart';
+import 'package:hayy_hotelio_app/bloc/booking/booking_bloc.dart';
+import 'package:hayy_hotelio_app/models/booking_model.dart';
 import 'package:hayy_hotelio_app/pages/widgets/transaction_item.dart';
+import 'package:hayy_hotelio_app/shared/app_format.dart';
 import 'package:hayy_hotelio_app/shared/styles.dart';
+import 'package:intl/intl.dart';
+import 'package:shimmer/shimmer.dart';
 
-class HistoryPage extends StatelessWidget {
+class HistoryPage extends StatefulWidget {
   const HistoryPage({super.key});
 
   @override
+  State<HistoryPage> createState() => _HistoryPageState();
+}
+
+class _HistoryPageState extends State<HistoryPage> {
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: ListView(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 30),
-        children: [
-          // Header (image profile, title, booking count)
-          header(),
-          // Recent transaction
-          transaction('Today'),
-          // Other transaction
-          transaction('Yesterday'),
-        ],
+    return BlocProvider(
+      create: (context) => BookingBloc()
+        ..add(
+          GetBooking('IhY6nAIZUVWx77YWSkFvs7bEyOt1'),
+        ),
+      child: BlocBuilder<AuthBloc, AuthState>(
+        builder: (context, state) {
+          if (state is AuthSuccess) {
+            final userId = state.user.id!;
+            context.read<BookingBloc>().add(GetBooking(userId));
+            return Scaffold(
+              body: ListView(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 24, vertical: 30),
+                children: [
+                  // Header (image profile, title, booking count)
+                  header(),
+                  // Transaction List
+                  BlocBuilder<BookingBloc, BookingState>(
+                    builder: (context, state) {
+                      if (state is BookingLoading) {
+                        return Shimmer.fromColors(
+                          baseColor: whiteColor,
+                          highlightColor: lightGrayColor,
+                          child: Container(
+                            width: double.infinity,
+                            height: 325,
+                            margin: const EdgeInsets.symmetric(horizontal: 24),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(16),
+                              gradient: LinearGradient(
+                                colors: [whiteColor, lightGrayColor],
+                              ),
+                            ),
+                          ),
+                        );
+                      }
+
+                      if (state is BookingFailed) {
+                        return Center(
+                          child: Text(
+                            'Error Fetching Data: ${state.errorMessage}',
+                            style: blackTextStyle.copyWith(fontSize: 16),
+                          ),
+                        );
+                      }
+
+                      if (state is BookingSuccess) {
+                        return GroupedListView<BookingModel, String>(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          elements: state.booking,
+                          groupBy: (e) => e.date!,
+                          groupSeparatorBuilder: (value) {
+                            String date = DateFormat('yyyy-MM-dd')
+                                        .format(DateTime.now()) ==
+                                    value
+                                ? 'Latest Transaction'
+                                : AppFormat.dateMonth(value);
+
+                            return Text(
+                              date,
+                              style: blackTextStyle.copyWith(
+                                fontSize: 16,
+                                fontWeight: semiBold,
+                              ),
+                            );
+                          },
+                          itemBuilder: (context, element) {
+                            return TransactionItem(booking: element);
+                          },
+                        );
+                      }
+                      return Center(child: Text(state.toString()));
+                    },
+                  ),
+                ],
+              ),
+            );
+          }
+          return Container();
+        },
       ),
     );
   }
@@ -51,31 +135,6 @@ class HistoryPage extends StatelessWidget {
               Text('3 Transactions', style: grayTextStyle)
             ],
           )
-        ],
-      ),
-    );
-  }
-
-  Widget transaction(String dateTime) {
-    return Container(
-      margin: const EdgeInsets.only(top: 50),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Today',
-            style: blackTextStyle.copyWith(
-              fontSize: 16,
-              fontWeight: semiBold,
-            ),
-          ),
-          const SizedBox(height: 10),
-          // Transaction item
-          TransactionItem(
-            imgUrl: 'assets/images/img_hotel_1.png',
-            name: 'Round O\' Park',
-            dateTime: '2 Aug 2022',
-          ),
         ],
       ),
     );

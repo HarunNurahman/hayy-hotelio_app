@@ -15,3 +15,11 @@ class AddBooking extends BookingEvent {
   @override
   List<Object> get props => [userId, booking];
 }
+
+class GetBooking extends BookingEvent {
+  final String userId;
+  const GetBooking(this.userId);
+
+  @override
+  List<Object> get props => [userId];
+}

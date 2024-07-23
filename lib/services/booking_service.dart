@@ -44,4 +44,19 @@ class BookingService {
       throw Exception(e.toString());
     }
   }
+
+  // Mengambil semua data booking
+  static Future<List<BookingModel>> getBooking(String userId) async {
+    try {
+      var result = await FirebaseFirestore.instance
+          .collection('user')
+          .doc(userId)
+          .collection('booking')
+          .get();
+
+      return result.docs.map((e) => BookingModel.fromJson(e.data())).toList();
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
 }
