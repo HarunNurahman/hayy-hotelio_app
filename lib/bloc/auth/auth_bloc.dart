@@ -11,10 +11,10 @@ part 'auth_state.dart';
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   AuthBloc() : super(AuthInitial()) {
     on<AuthEvent>((event, emit) async {
-      if (event is GetUser) {
+      if (event is AuthGetUser) {
         try {
           emit(AuthLoading());
-          UserModel user = await UserService().getUserbyId(event.userId);
+          UserModel user = await UserService().getWhereId(event.userId);
           emit(AuthSuccess(user));
         } catch (e) {
           emit(AuthFailed(e.toString()));

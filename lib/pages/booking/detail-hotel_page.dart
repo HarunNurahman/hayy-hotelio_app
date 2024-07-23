@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:hayy_hotelio_app/models/hotel_model.dart';
+import 'package:hayy_hotelio_app/models/user_model.dart';
 import 'package:hayy_hotelio_app/pages/booking/checkout_page.dart';
 import 'package:hayy_hotelio_app/pages/widgets/activity_item.dart';
 import 'package:hayy_hotelio_app/pages/widgets/custom_button.dart';
+import 'package:hayy_hotelio_app/services/session_service.dart';
 import 'package:hayy_hotelio_app/shared/app_format.dart';
 import 'package:hayy_hotelio_app/shared/styles.dart';
 
@@ -256,11 +258,16 @@ class _DetailHotelPageState extends State<DetailHotelPage> {
           ),
           // Book button
           CustomButton(
-            onPressed: () {
+            onPressed: () async {
+              UserModel user = await SessionService().getSession();
+              print(user.id);
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => CheckoutPage(hotel: widget.hotel),
+                  builder: (context) => CheckoutPage(
+                    hotel: widget.hotel,
+                    userId: user.id!,
+                  ),
                 ),
               );
             },

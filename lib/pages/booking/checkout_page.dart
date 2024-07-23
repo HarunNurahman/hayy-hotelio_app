@@ -12,9 +12,11 @@ import 'package:intl/intl.dart';
 
 class CheckoutPage extends StatefulWidget {
   final HotelModel hotel;
+  final String userId;
   const CheckoutPage({
     super.key,
     required this.hotel,
+    required this.userId,
   });
 
   @override
@@ -25,10 +27,12 @@ class _CheckoutPageState extends State<CheckoutPage> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => AuthBloc()
-        ..add(
-          GetUser('IhY6nAIZUVWx77YWSkFvs7bEyOt1'),
-        ),
+      create: (context) {
+        return AuthBloc()
+          ..add(
+            AuthGetUser(widget.userId),
+          );
+      },
       child: Scaffold(
         appBar: AppBar(title: const Text('Checkout')),
         body: ListView(
@@ -44,33 +48,56 @@ class _CheckoutPageState extends State<CheckoutPage> {
             BlocBuilder<AuthBloc, AuthState>(
               builder: (context, state) {
                 if (state is AuthSuccess) {
-                  final userId = state.user.id;
                   return CustomButton(
                     text: 'Proceed to Payment',
                     onPressed: () {
-                      BlocProvider.of<BookingBloc>(context).add(
-                        AddBooking(
-                          userId!,
-                          BookingModel(
-                            id: '',
-                            idHotel: widget.hotel.id!,
-                            cover: widget.hotel.cover!,
-                            name: widget.hotel.name!,
-                            location: widget.hotel.location!,
-                            date:
-                                DateFormat('yyyy-MM-dd').format(DateTime.now()),
-                            guest: 1,
-                            breakfast: 'Included',
-                            checkInTime: '14:00 WIB',
-                            night: 1,
-                            serviceFee: 15,
-                            activity: 20,
-                            totalPayment: (widget.hotel.price! * 1) + 15 + 20,
-                            status: 'PAID',
-                            isDone: false,
-                          ),
-                        ),
-                      );
+                      context.read<BookingBloc>().add(
+                            AddBooking(
+                              widget.userId,
+                              BookingModel(
+                                id: '',
+                                idHotel: widget.hotel.id!,
+                                cover: widget.hotel.cover!,
+                                name: widget.hotel.name!,
+                                location: widget.hotel.location!,
+                                date: DateFormat('yyyy-MM-dd')
+                                    .format(DateTime.now()),
+                                guest: 1,
+                                breakfast: 'Included',
+                                checkInTime: '14:00 WIB',
+                                night: 1,
+                                serviceFee: 15,
+                                activity: 20,
+                                totalPayment:
+                                    (widget.hotel.price! * 1) + 15 + 20,
+                                status: 'PAID',
+                                isDone: false,
+                              ),
+                            ),
+                          );
+                      // BlocProvider.of<BookingBloc>(context).add(
+                      //   AddBooking(
+                      //     userId!,
+                      //     BookingModel(
+                      //       id: '',
+                      //       idHotel: hotel.id!,
+                      //       cover: hotel.cover!,
+                      //       name: hotel.name!,
+                      //       location: hotel.location!,
+                      //       date:
+                      //           DateFormat('yyyy-MM-dd').format(DateTime.now()),
+                      //       guest: 1,
+                      //       breakfast: 'Included',
+                      //       checkInTime: '14:00 WIB',
+                      //       night: 1,
+                      //       serviceFee: 15,
+                      //       activity: 20,
+                      //       totalPayment: (hotel.price! * 1) + 15 + 20,
+                      //       status: 'PAID',
+                      //       isDone: false,
+                      //     ),
+                      //   ),
+                      // );
                       Navigator.pushNamed(
                         context,
                         '/checkout-success',

@@ -15,10 +15,12 @@ import 'package:hayy_hotelio_app/pages/splash_page.dart';
 import 'package:hayy_hotelio_app/services/bloc_observer.dart';
 import 'package:hayy_hotelio_app/services/session_service.dart';
 import 'package:hayy_hotelio_app/shared/styles.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Bloc.observer = SimpleBlocObserver();
+  initializeDateFormatting();
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,

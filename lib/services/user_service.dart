@@ -18,16 +18,29 @@ class UserService {
     }
   }
 
+  // Future<UserModel> getUserbyId(String id) async {
+  //   try {
+  //     DocumentSnapshot snapshot = await reference.doc(id).get();
+  //     return UserModel(
+  //       id: id,
+  //       email: snapshot['email'],
+  //       name: snapshot['name'],
+  //       password: snapshot['password'],
+  //     );
+  //   } catch (e) {
+  //     rethrow;
+  //   }
+  // }
+
   // Fungsi untuk mengambil data user berdasarkan ID
-  Future<UserModel> getUserbyId(String id) async {
+  Future<UserModel> getWhereId(String id) async {
     try {
-      DocumentSnapshot snapshot = await reference.doc(id).get();
-      return UserModel(
-        id: id,
-        email: snapshot['email'],
-        name: snapshot['name'],
-        password: snapshot['password'],
-      );
+      DocumentReference<Map<String, dynamic>> ref =
+          FirebaseFirestore.instance.collection('user').doc(id);
+
+      DocumentSnapshot<Map<String, dynamic>> doc = await ref.get();
+
+      return UserModel.fromJson(doc.data()!);
     } catch (e) {
       rethrow;
     }
