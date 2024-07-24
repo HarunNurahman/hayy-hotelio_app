@@ -36,6 +36,4 @@ class AuthGetUser extends AuthEvent {
   List<Object> get props => [userId];
 }
 
-class AuthLoadUser extends AuthEvent {}
-
 class AuthSignOut extends AuthEvent {}

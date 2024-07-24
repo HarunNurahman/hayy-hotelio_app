@@ -260,7 +260,7 @@ class _DetailHotelPageState extends State<DetailHotelPage> {
           CustomButton(
             onPressed: () async {
               UserModel user = await SessionService().getSession();
-              print(user.id);
+              // print(user.id!);
               Navigator.push(
                 context,
                 MaterialPageRoute(

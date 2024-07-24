@@ -3,6 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:hayy_hotelio_app/models/user_model.dart';
 import 'package:hayy_hotelio_app/services/auth_service.dart';
 import 'package:hayy_hotelio_app/services/session_service.dart';
+import 'package:hayy_hotelio_app/services/user_service.dart';
 
 part 'auth_event.dart';
 part 'auth_state.dart';
@@ -56,6 +57,16 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           final UserModel user =
               await AuthService().signIn(data.email!, data.password!);
 
+          emit(AuthSuccess(user));
+        } catch (e) {
+          emit(AuthFailed(e.toString()));
+        }
+      }
+
+      if (event is AuthGetUser) {
+        try {
+          emit(AuthLoading());
+          UserModel user = await UserService().getUserbyId(event.userId);
           emit(AuthSuccess(user));
         } catch (e) {
           emit(AuthFailed(e.toString()));

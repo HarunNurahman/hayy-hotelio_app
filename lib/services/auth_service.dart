@@ -18,7 +18,7 @@ class AuthService {
       // Inisialiasai untuk mengambil id user
       String uid = userCredential.user!.uid;
       // Mengambil data user berdasarkan id untuk dikembalikan ke UserModel
-      UserModel user = await UserService().getWhereId(uid);
+      UserModel user = await UserService().getUserbyId(uid);
       // Menyimpan user session
       SessionService().saveSession(user);
 

@@ -225,8 +225,9 @@ class _NearbyHotelPageState extends State<NearbyHotelPage> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) =>
-                                DetailHotelPage(hotel: element),
+                            builder: (context) => DetailHotelPage(
+                              hotel: element,
+                            ),
                           ),
                         );
                       },

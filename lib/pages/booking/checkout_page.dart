@@ -13,11 +13,7 @@ import 'package:intl/intl.dart';
 class CheckoutPage extends StatefulWidget {
   final HotelModel hotel;
   final String userId;
-  const CheckoutPage({
-    super.key,
-    required this.hotel,
-    required this.userId,
-  });
+  const CheckoutPage({super.key, required this.hotel, required this.userId});
 
   @override
   State<CheckoutPage> createState() => _CheckoutPageState();
@@ -30,7 +26,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
       create: (context) {
         return AuthBloc()
           ..add(
-            AuthLoadUser(),
+            AuthGetUser(widget.userId),
           );
       },
       child: Scaffold(
