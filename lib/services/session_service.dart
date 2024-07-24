@@ -34,7 +34,7 @@ class SessionService {
         // Mengkonvertkan data user ke bentuk UserModel
         userModel = UserModel.fromJson(userMap);
       } catch (e) {
-        print(e);
+        throw Exception(e.toString());
       }
     }
 

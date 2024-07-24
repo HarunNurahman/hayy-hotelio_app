@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hayy_hotelio_app/bloc/auth/auth_bloc.dart';
 import 'package:hayy_hotelio_app/bloc/hotel/hotel_bloc.dart';
 import 'package:hayy_hotelio_app/pages/booking/detail-hotel_page.dart';
 import 'package:hayy_hotelio_app/pages/widgets/category_item.dart';
@@ -76,7 +77,7 @@ class _NearbyHotelPageState extends State<NearbyHotelPage> {
               SessionService().deleteSession();
               Navigator.pushNamedAndRemoveUntil(
                 context,
-                '/login',
+                '/sign-in',
                 (route) => false,
               );
             },
@@ -89,32 +90,32 @@ class _NearbyHotelPageState extends State<NearbyHotelPage> {
             ),
           ),
           // Nearby hotel
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text(
-                'Near Me',
-                style: blackTextStyle.copyWith(
-                  fontSize: 24,
-                  fontWeight: bold,
-                ),
-              ),
-              const SizedBox(height: 2),
-              BlocBuilder<HotelBloc, HotelState>(
-                builder: (context, state) {
-                  if (state is HotelSuccess) {
-                    return Text(
-                      '${state.hotel.length} hotels',
-                      style: grayTextStyle,
-                    );
-                  }
-                  return Text(
-                    ' hotels',
-                    style: grayTextStyle,
-                  );
-                },
-              )
-            ],
+          BlocBuilder<AuthBloc, AuthState>(
+            builder: (context, state) {
+              if (state is AuthSuccess) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    const SizedBox(height: 2),
+                    Text(
+                      'Welcome',
+                      style: blackTextStyle.copyWith(
+                        fontSize: 14,
+                        fontWeight: medium,
+                      ),
+                    ),
+                    Text(
+                      state.user.name!.toUpperCase(),
+                      style: blackTextStyle.copyWith(
+                        fontSize: 18,
+                        fontWeight: bold,
+                      ),
+                    ),
+                  ],
+                );
+              }
+              return Container();
+            },
           )
         ],
       ),
@@ -220,12 +221,15 @@ class _NearbyHotelPageState extends State<NearbyHotelPage> {
               children: state.hotel
                   .map(
                     (element) => HotelItem(
-                      onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => DetailHotelPage(element),
-                        ),
-                      ),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                DetailHotelPage(hotel: element),
+                          ),
+                        );
+                      },
                       hotel: element,
                     ),
                   )

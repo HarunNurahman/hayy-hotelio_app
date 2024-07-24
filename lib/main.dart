@@ -13,7 +13,7 @@ import 'package:hayy_hotelio_app/pages/dashboard/dashboard_page.dart';
 import 'package:hayy_hotelio_app/pages/onboarding_page.dart';
 import 'package:hayy_hotelio_app/pages/splash_page.dart';
 import 'package:hayy_hotelio_app/services/bloc_observer.dart';
-import 'package:hayy_hotelio_app/services/session_service.dart';
+// import 'package:hayy_hotelio_app/services/session_service.dart';
 import 'package:hayy_hotelio_app/shared/styles.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
@@ -38,7 +38,8 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider<DashboardBloc>(create: (context) => DashboardBloc()),
         BlocProvider<AuthBloc>(
-            create: (context) => AuthBloc()..add(AuthLoadUser())),
+          create: (context) => AuthBloc()..add(AuthGetCurrentUser()),
+        ),
         BlocProvider<HotelBloc>(create: (context) => HotelBloc()),
         BlocProvider<BookingBloc>(create: (context) => BookingBloc()),
       ],
@@ -57,22 +58,9 @@ class MyApp extends StatelessWidget {
             ),
           ),
         ),
-        initialRoute: '/',
         routes: {
           '/': (context) => const SplashPage(),
-          // Apabila session ada, langsung ke dashboard
-          '/onboarding': (context) {
-            return FutureBuilder(
-              future: SessionService().getSession(),
-              builder: (context, snapshot) {
-                if (snapshot.data == null || snapshot.data!.id == null) {
-                  return const OnboardingPage();
-                } else {
-                  return const DashboardPage();
-                }
-              },
-            );
-          },
+          '/onboarding': (context) => const OnboardingPage(),
           '/dashboard': (context) => const DashboardPage(),
           '/sign-in': (context) => const SignInPage(),
           '/sign-up': (context) => const SignUpPage(),

@@ -10,7 +10,7 @@ import 'package:hayy_hotelio_app/shared/styles.dart';
 
 class DetailHotelPage extends StatefulWidget {
   final HotelModel hotel;
-  const DetailHotelPage(this.hotel, {super.key});
+  const DetailHotelPage({super.key, required this.hotel});
 
   @override
   State<DetailHotelPage> createState() => _DetailHotelPageState();
@@ -273,7 +273,7 @@ class _DetailHotelPageState extends State<DetailHotelPage> {
             },
             text: 'Booking Now',
             width: 180,
-          )
+          ),
         ],
       ),
     );

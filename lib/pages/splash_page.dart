@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hayy_hotelio_app/bloc/auth/auth_bloc.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -9,18 +11,37 @@ class SplashPage extends StatefulWidget {
 
 class _SplashPageState extends State<SplashPage> {
   @override
-  void initState() {
-    Future.delayed(const Duration(seconds: 3), () {
-      Navigator.pushReplacementNamed(context, '/onboarding');
-    });
-    super.initState();
-  }
+  // void initState() {
+  //   Future.delayed(const Duration(seconds: 3), () {
+  //     Navigator.pushReplacementNamed(context, '/onboarding');
+  //   });
+  //   super.initState();
+  // }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Image.asset('assets/images/app_logo.png', width: 150),
+      body: BlocListener<AuthBloc, AuthState>(
+        listener: (context, state) {
+          if (state is AuthSuccess) {
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              '/dashboard',
+              (route) => false,
+            );
+          }
+
+          if (state is AuthFailed) {
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              '/onboarding',
+              (route) => false,
+            );
+          }
+        },
+        child: Center(
+          child: Image.asset('assets/images/app_logo.png', width: 150),
+        ),
       ),
     );
   }

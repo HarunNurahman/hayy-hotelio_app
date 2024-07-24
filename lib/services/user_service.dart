@@ -31,4 +31,9 @@ class UserService {
       rethrow;
     }
   }
+
+  // Future<String?> getUserId() async {
+  //   User? user = FirebaseAuth.instance.currentUser;
+  //   return user?.uid;
+  // }
 }

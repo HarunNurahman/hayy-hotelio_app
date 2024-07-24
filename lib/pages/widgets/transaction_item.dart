@@ -1,12 +1,19 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:hayy_hotelio_app/models/booking_model.dart';
-import 'package:hayy_hotelio_app/shared/app_format.dart';
 import 'package:hayy_hotelio_app/shared/styles.dart';
 
 class TransactionItem extends StatelessWidget {
-  final BookingModel booking;
-  const TransactionItem({super.key, required this.booking});
+  final String imgUrl;
+  final String name;
+  final String dateTime;
+  final bool isPaid;
+
+  const TransactionItem({
+    super.key,
+    required this.imgUrl,
+    required this.name,
+    required this.dateTime,
+    this.isPaid = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -23,8 +30,8 @@ class TransactionItem extends StatelessWidget {
           // Hotel cover
           ClipRRect(
             borderRadius: BorderRadius.circular(16),
-            child: CachedNetworkImage(
-              imageUrl: booking.cover!,
+            child: Image.asset(
+              imgUrl,
               width: 90,
               height: 70,
               fit: BoxFit.cover,
@@ -37,14 +44,14 @@ class TransactionItem extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  booking.name!,
+                  name,
                   style: blackTextStyle.copyWith(
                     fontSize: 16,
                     fontWeight: semiBold,
                   ),
                 ),
                 const SizedBox(height: 4),
-                Text(AppFormat.date(booking.date!), style: blackTextStyle)
+                Text(dateTime, style: blackTextStyle)
               ],
             ),
           ),
@@ -55,11 +62,11 @@ class TransactionItem extends StatelessWidget {
               vertical: 6,
             ),
             decoration: BoxDecoration(
-              color: booking.status == 'PAID' ? darkGrayColor : redColor,
+              color: isPaid ? darkGrayColor : redColor,
               borderRadius: BorderRadius.circular(50),
             ),
             child: Text(
-              booking.status!,
+              isPaid ? 'PAID' : 'CANCELLED',
               style: whiteTextStyle.copyWith(
                 fontSize: 10,
                 fontWeight: semiBold,

@@ -10,17 +10,7 @@ part 'auth_state.dart';
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   AuthBloc() : super(AuthInitial()) {
     on<AuthEvent>((event, emit) async {
-      // if (event is AuthGetUser) {
-      //   try {
-      //     emit(AuthLoading());
-      //     UserModel user = await UserService().getWhereId(event.userId);
-      //     emit(AuthSuccess(user));
-      //   } catch (e) {
-      //     emit(AuthFailed(e.toString()));
-      //   }
-      // }
-
-      // Jika event AuthSignIn dijalankan
+      // Proses sign in
       if (event is AuthSignIn) {
         try {
           emit(AuthLoading());
@@ -29,6 +19,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
             event.email,
             event.password,
           );
+
           // Mengirimkan state AuthSuccess dengan mengembalikan data user
           emit(AuthSuccess(user));
         } catch (e) {
@@ -36,7 +27,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         }
       }
 
-      // Jika event AuthSignUp dijalankan
+      // Proses pendaftaran akun
       if (event is AuthSignUp) {
         try {
           // Mengirimkan state AuthLoading
@@ -54,10 +45,17 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         }
       }
 
-      if (event is AuthLoadUser) {
+      // Apabila terdapat session dari AuthGetCurrentUser maka langsung ke dashboard
+      if (event is AuthGetCurrentUser) {
         try {
           emit(AuthLoading());
-          UserModel user = await SessionService().getSession();
+
+          // Mengambil data user dari shared preferences lalu dicek di fungsi getSession
+          final UserModel data = await SessionService().getSession();
+          // Apabila user sudah login, langsung ke dashboard melalui fungsi signIn dari AuthService
+          final UserModel user =
+              await AuthService().signIn(data.email!, data.password!);
+
           emit(AuthSuccess(user));
         } catch (e) {
           emit(AuthFailed(e.toString()));

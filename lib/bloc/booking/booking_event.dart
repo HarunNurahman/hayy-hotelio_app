@@ -16,6 +16,8 @@ class AddBooking extends BookingEvent {
   List<Object> get props => [userId, booking];
 }
 
+class EmptyBooking extends BookingEvent {}
+
 class GetBooking extends BookingEvent {
   final String userId;
   const GetBooking(this.userId);
