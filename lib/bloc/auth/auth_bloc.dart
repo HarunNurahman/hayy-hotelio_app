@@ -66,7 +66,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       if (event is AuthGetUser) {
         try {
           emit(AuthLoading());
-          UserModel user = await UserService().getUserbyId(event.userId);
+          UserModel user = await UserService().getUser(event.userId);
           emit(AuthSuccess(user));
         } catch (e) {
           emit(AuthFailed(e.toString()));

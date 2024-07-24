@@ -31,6 +31,15 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
           emit(BookingFailed(e.toString()));
         }
       }
+
+      if (event is EmptyBooking) {
+        try {
+          emit(BookingLoading());
+          emit(const BookingSuccess([]));
+        } catch (e) {
+          emit(BookingFailed(e.toString()));
+        }
+      }
     });
   }
 }

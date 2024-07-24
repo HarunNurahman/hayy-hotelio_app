@@ -18,7 +18,8 @@ class UserService {
     }
   }
 
-  Future<UserModel> getUserbyId(String id) async {
+  // Fungsi untuk mengambil data user berdasarkan ID
+  Future<UserModel> getUser(String id) async {
     try {
       DocumentSnapshot snapshot = await reference.doc(id).get();
       return UserModel(
@@ -32,7 +33,6 @@ class UserService {
     }
   }
 
-  // Fungsi untuk mengambil data user berdasarkan ID
   // Future<UserModel> getWhereId(String id) async {
   //   try {
   //     DocumentReference<Map<String, dynamic>> ref =
