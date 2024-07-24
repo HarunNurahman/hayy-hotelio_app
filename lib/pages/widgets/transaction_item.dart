@@ -1,19 +1,18 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:hayy_hotelio_app/models/booking_model.dart';
+import 'package:hayy_hotelio_app/shared/app_format.dart';
 import 'package:hayy_hotelio_app/shared/styles.dart';
 
 class TransactionItem extends StatelessWidget {
   final BookingModel booking;
-  const TransactionItem({
-    super.key,
-    required this.booking,
-  });
+  const TransactionItem({super.key, required this.booking});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
+      margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: whiteColor,
@@ -32,7 +31,7 @@ class TransactionItem extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 12),
-          // Hotel name and booked date
+          // Nama hotel dan status booking
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -45,7 +44,7 @@ class TransactionItem extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 4),
-                Text(booking.date!, style: blackTextStyle)
+                Text(AppFormat.date(booking.date!), style: blackTextStyle)
               ],
             ),
           ),

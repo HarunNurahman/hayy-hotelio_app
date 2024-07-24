@@ -66,7 +66,7 @@ class _NearbyHotelPageState extends State<NearbyHotelPage> {
 
   Widget header() {
     return Container(
-      margin: const EdgeInsets.only(top: 30),
+      margin: const EdgeInsets.only(top: 40),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [

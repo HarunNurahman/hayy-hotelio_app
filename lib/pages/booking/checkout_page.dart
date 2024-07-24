@@ -30,7 +30,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
       create: (context) {
         return AuthBloc()
           ..add(
-            AuthGetUser(widget.userId),
+            AuthLoadUser(),
           );
       },
       child: Scaffold(
