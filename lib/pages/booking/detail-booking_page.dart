@@ -1,90 +1,32 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hayy_hotelio_app/bloc/auth/auth_bloc.dart';
-import 'package:hayy_hotelio_app/bloc/booking/booking_bloc.dart';
 import 'package:hayy_hotelio_app/models/booking_model.dart';
-import 'package:hayy_hotelio_app/models/hotel_model.dart';
-import 'package:hayy_hotelio_app/pages/widgets/custom_button.dart';
 import 'package:hayy_hotelio_app/shared/app_format.dart';
 import 'package:hayy_hotelio_app/shared/styles.dart';
-import 'package:intl/intl.dart';
 
-class CheckoutPage extends StatefulWidget {
-  final HotelModel hotel;
-  final String userId;
-  const CheckoutPage({super.key, required this.hotel, required this.userId});
+class DetailBookingPage extends StatefulWidget {
+  final BookingModel bookingModel;
+  const DetailBookingPage({super.key, required this.bookingModel});
 
   @override
-  State<CheckoutPage> createState() => _CheckoutPageState();
+  State<DetailBookingPage> createState() => _DetailBookingPageState();
 }
 
-class _CheckoutPageState extends State<CheckoutPage> {
+class _DetailBookingPageState extends State<DetailBookingPage> {
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) {
-        return AuthBloc()
-          ..add(
-            AuthGetUser(widget.userId),
-          );
-      },
-      child: Scaffold(
-        appBar: AppBar(title: const Text('Checkout')),
-        body: ListView(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 30),
-          children: [
-            // Hotel information
-            hotelInfo(),
-            // Room detail
-            roomDetail(),
-            // Payment
-            payment(),
-            // Pay button
-            BlocBuilder<AuthBloc, AuthState>(
-              builder: (context, state) {
-                if (state is AuthSuccess) {
-                  return CustomButton(
-                    text: 'Proceed to Payment',
-                    onPressed: () {
-                      context.read<BookingBloc>().add(
-                            AddBooking(
-                              widget.userId,
-                              BookingModel(
-                                id: '',
-                                idHotel: widget.hotel.id!,
-                                cover: widget.hotel.cover!,
-                                name: widget.hotel.name!,
-                                location: widget.hotel.location!,
-                                date: DateFormat('yyyy-MM-dd')
-                                    .format(DateTime.now()),
-                                guest: 1,
-                                breakfast: 'Included',
-                                checkInTime: '14:00 WIB',
-                                night: 1,
-                                serviceFee: 15,
-                                activity: 20,
-                                totalPayment:
-                                    (widget.hotel.price! * 1) + 15 + 20,
-                                status: 'PAID',
-                                isDone: false,
-                              ),
-                            ),
-                          );
-
-                      Navigator.pushNamed(
-                        context,
-                        '/checkout-success',
-                        arguments: widget.hotel,
-                      );
-                    },
-                  );
-                }
-                return Container();
-              },
-            ),
-          ],
-        ),
+    return Scaffold(
+      appBar: AppBar(title: const Text('Detail Transaction')),
+      body: ListView(
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 30),
+        children: [
+          // Hotel information
+          hotelInfo(),
+          // Room Detail
+          roomDetail(),
+          // Payment method
+          payment(),
+        ],
       ),
     );
   }
@@ -103,7 +45,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
           ClipRRect(
             borderRadius: BorderRadius.circular(16),
             child: CachedNetworkImage(
-              imageUrl: widget.hotel.cover!,
+              imageUrl: widget.bookingModel.cover!,
               width: 90,
               height: 70,
               fit: BoxFit.cover,
@@ -116,14 +58,14 @@ class _CheckoutPageState extends State<CheckoutPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  widget.hotel.name!,
+                  widget.bookingModel.name!,
                   style: blackTextStyle.copyWith(
                     fontSize: 16,
                     fontWeight: semiBold,
                   ),
                 ),
                 const SizedBox(height: 4),
-                Text(widget.hotel.location!, style: grayTextStyle)
+                Text(widget.bookingModel.location!, style: grayTextStyle)
               ],
             ),
           )
@@ -151,18 +93,24 @@ class _CheckoutPageState extends State<CheckoutPage> {
               fontWeight: semiBold,
             ),
           ),
-          roomItem('Date', AppFormat.date(DateTime.now().toIso8601String())),
-          roomItem('Guest', '1 Guest(s)'),
-          roomItem('Breakfast', 'Included'),
-          roomItem('Check-in Time', '14:00 WIB'),
-          roomItem('Duration', '1 Night'),
-          roomItem('Service Fee', AppFormat.currency(5)),
-          roomItem('Activity', AppFormat.currency(15)),
+          roomItem('Date', AppFormat.date(widget.bookingModel.date!)),
+          roomItem('Guest', '${widget.bookingModel.guest!} Person'),
+          roomItem('Breakfast', widget.bookingModel.breakfast!),
+          roomItem('Check-in Time', widget.bookingModel.checkInTime!),
+          roomItem('Duration', '${widget.bookingModel.night!} Night'),
+          roomItem(
+            'Service Fee',
+            AppFormat.currency(widget.bookingModel.serviceFee!),
+          ),
+          roomItem(
+            'Activity',
+            AppFormat.currency(widget.bookingModel.activity!),
+          ),
           const SizedBox(height: 10),
           Divider(height: 1, color: darkGrayColor),
           roomItem(
             'Total Payment',
-            AppFormat.currency(widget.hotel.price! + 5 + 15),
+            AppFormat.currency(widget.bookingModel.totalPayment!),
             color: darkGrayColor,
           ),
         ],
@@ -242,7 +190,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                       ),
                       const SizedBox(height: 2),
                       Text(
-                        'Balance ${AppFormat.currency(5000)}',
+                        'Verified',
                         style: grayTextStyle.copyWith(
                           fontSize: 12,
                         ),
@@ -251,7 +199,25 @@ class _CheckoutPageState extends State<CheckoutPage> {
                   ),
                 ),
                 // Verified icon
-                Image.asset('assets/icons/ic_verified.png', width: 20)
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 6,
+                  ),
+                  decoration: BoxDecoration(
+                    color: widget.bookingModel.status == 'PAID'
+                        ? darkGrayColor
+                        : redColor,
+                    borderRadius: BorderRadius.circular(50),
+                  ),
+                  child: Text(
+                    widget.bookingModel.status!,
+                    style: whiteTextStyle.copyWith(
+                      fontSize: 10,
+                      fontWeight: semiBold,
+                    ),
+                  ),
+                ),
               ],
             ),
           )

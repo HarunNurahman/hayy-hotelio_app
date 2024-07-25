@@ -11,8 +11,7 @@ class HotelService {
       // Mengonversi data ke objek HotelModel
       return list.docs.map((e) => HotelModel.fromJson(e.data())).toList();
     } catch (e) {
-      print('Error $e');
-      rethrow;
+      throw Exception(e.toString);
     }
   }
 
@@ -27,12 +26,10 @@ class HotelService {
       if (doc.exists && doc.data() != null) {
         return HotelModel.fromJson(doc.data()!);
       } else {
-        print('No such document!');
         return null;
       }
     } catch (e) {
-      print('Error $e');
-      rethrow;
+      throw Exception(e.toString);
     }
   }
 
@@ -48,8 +45,7 @@ class HotelService {
           querySnapshot.docs.map((e) => HotelModel.fromSnapshot(e)).toList();
       return result;
     } catch (e) {
-      print('Error $e');
-      rethrow;
+      throw Exception(e.toString);
     }
   }
 
@@ -70,10 +66,5 @@ class HotelService {
     } catch (e) {
       throw Exception(e.toString());
     }
-    // var list = await FirebaseFirestore.instance
-    //     .collection('hotel')
-    //     .where('category', isEqualTo: category)
-    //     .get();
-    // return list.docs.map((e) => HotelModel.fromJson(e.data())).toList();
   }
 }

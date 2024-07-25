@@ -14,7 +14,7 @@ class UserService {
         'password': user.password,
       });
     } catch (e) {
-      rethrow;
+      throw Exception(e.toString);
     }
   }
 
@@ -29,7 +29,7 @@ class UserService {
         password: snapshot['password'],
       );
     } catch (e) {
-      rethrow;
+      throw Exception(e.toString);
     }
   }
 

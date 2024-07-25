@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:hayy_hotelio_app/bloc/booking/booking_bloc.dart';
+import 'package:hayy_hotelio_app/models/booking_model.dart';
 import 'package:hayy_hotelio_app/models/user_model.dart';
+import 'package:hayy_hotelio_app/pages/booking/detail-booking_page.dart';
 import 'package:hayy_hotelio_app/pages/widgets/transaction_item.dart';
 import 'package:hayy_hotelio_app/shared/app_format.dart';
 import 'package:hayy_hotelio_app/shared/styles.dart';
 import 'package:intl/intl.dart';
-import 'package:shimmer/shimmer.dart';
 
 class HistoryPage extends StatefulWidget {
   final UserModel userModel;
@@ -64,17 +65,17 @@ class _HistoryPageState extends State<HistoryPage> {
                     );
                   }
 
-                  return GroupedListView(
+                  return GroupedListView<BookingModel, String>(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     elements: state.booking,
-                    groupBy: (element) => element.date,
+                    groupBy: (element) => element.date!,
                     groupSeparatorBuilder: (value) {
                       String date =
                           DateFormat('yyyy-MM-dd').format(DateTime.now()) ==
                                   value
                               ? 'Latest Transaction'
-                              : AppFormat.dateMonth(value!);
+                              : AppFormat.dateMonth(value);
                       return Container(
                         margin: const EdgeInsets.only(bottom: 10),
                         child: Text(
@@ -87,7 +88,18 @@ class _HistoryPageState extends State<HistoryPage> {
                       );
                     },
                     itemBuilder: (context, element) {
-                      return TransactionItem(booking: element);
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  DetailBookingPage(bookingModel: element),
+                            ),
+                          );
+                        },
+                        child: TransactionItem(booking: element),
+                      );
                     },
                     itemComparator: (element1, element2) =>
                         element1.date!.compareTo(element2.date!),
@@ -144,26 +156,4 @@ class _HistoryPageState extends State<HistoryPage> {
       ),
     );
   }
-
-  // Widget transaction(String dateTime) {
-  //   return Container(
-  //     margin: const EdgeInsets.only(top: 50),
-  //     child: Column(
-  //       crossAxisAlignment: CrossAxisAlignment.start,
-  //       children: [
-  //         Text(
-  //           'Today',
-  //           style: blackTextStyle.copyWith(fontSize: 16, fontWeight: semiBold),
-  //         ),
-  //         const SizedBox(height: 10),
-  //         // Transaction item
-  //         const TransactionItem(
-  //           imgUrl: 'assets/images/img_hotel_1.png',
-  //           name: 'Round O\' Park',
-  //           dateTime: '2 Aug 2022',
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
 }

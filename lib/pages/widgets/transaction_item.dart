@@ -5,20 +5,9 @@ import 'package:hayy_hotelio_app/shared/app_format.dart';
 import 'package:hayy_hotelio_app/shared/styles.dart';
 
 class TransactionItem extends StatelessWidget {
-  // final String imgUrl;
-  // final String name;
-  // final String dateTime;
-  // final bool isPaid;
   final BookingModel booking;
 
-  const TransactionItem({
-    super.key,
-    required this.booking,
-    // required this.imgUrl,
-    // required this.name,
-    // required this.dateTime,
-    // this.isPaid = false,
-  });
+  const TransactionItem({super.key, required this.booking});
 
   @override
   Widget build(BuildContext context) {
@@ -35,12 +24,6 @@ class TransactionItem extends StatelessWidget {
           // Hotel cover
           ClipRRect(
             borderRadius: BorderRadius.circular(16),
-            // child: Image.asset(
-            //   imgUrl,
-            //   width: 90,
-            //   height: 70,
-            //   fit: BoxFit.cover,
-            // ),
             child: CachedNetworkImage(
               imageUrl: booking.cover!,
               width: 90,

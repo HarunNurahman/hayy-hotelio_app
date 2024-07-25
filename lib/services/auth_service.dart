@@ -25,7 +25,7 @@ class AuthService {
       // Mengembalikan data user
       return user;
     } catch (e) {
-      rethrow;
+      throw Exception(e.toString);
     }
   }
 
@@ -51,7 +51,7 @@ class AuthService {
       await UserService().saveUser(user);
       return user;
     } catch (e) {
-      rethrow;
+      throw Exception(e.toString);
     }
   }
 }

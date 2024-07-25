@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:hayy_hotelio_app/models/booking_model.dart';
 import 'package:hayy_hotelio_app/models/hotel_model.dart';
 import 'package:hayy_hotelio_app/models/user_model.dart';
 import 'package:hayy_hotelio_app/pages/booking/checkout_page.dart';
+import 'package:hayy_hotelio_app/pages/booking/detail-booking_page.dart';
 import 'package:hayy_hotelio_app/pages/widgets/activity_item.dart';
 import 'package:hayy_hotelio_app/pages/widgets/custom_button.dart';
+import 'package:hayy_hotelio_app/services/booking_service.dart';
 import 'package:hayy_hotelio_app/services/session_service.dart';
 import 'package:hayy_hotelio_app/shared/app_format.dart';
 import 'package:hayy_hotelio_app/shared/styles.dart';
@@ -17,11 +20,35 @@ class DetailHotelPage extends StatefulWidget {
 }
 
 class _DetailHotelPageState extends State<DetailHotelPage> {
+  bool isBooked = false;
+  UserModel? user;
+  BookingModel? bookingData;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkBookingStatus();
+  }
+
+  // Fungsi untuk memeriksa status booking
+  Future<void> _checkBookingStatus() async {
+    // Mengambil user session
+    user = await SessionService().getSession();
+
+    // Mengecek apakah user sudah melakukan booking
+    if (user != null) {
+      bookingData = await BookingService.isBooked(user!.id!, widget.hotel.id!);
+      setState(() {
+        isBooked = bookingData != null;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Hotel Details')),
-      bottomNavigationBar: bottomNavBar(context),
+      bottomNavigationBar: isBooked ? bookedNavBar() : bottomNavBar(context),
       // Content box
       body: Container(
         margin: const EdgeInsets.only(top: 30),
@@ -260,7 +287,6 @@ class _DetailHotelPageState extends State<DetailHotelPage> {
           CustomButton(
             onPressed: () async {
               UserModel user = await SessionService().getSession();
-              // print(user.id!);
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -273,6 +299,52 @@ class _DetailHotelPageState extends State<DetailHotelPage> {
             },
             text: 'Booking Now',
             width: 180,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget bookedNavBar() {
+    return Container(
+      width: double.infinity,
+      height: 80,
+      padding: const EdgeInsets.symmetric(horizontal: 24),
+      decoration: BoxDecoration(
+        color: whiteColor,
+        border: Border(
+          top: BorderSide(color: lightGrayColor, width: 2),
+        ),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          // Price/night
+          Text('You Booked This', style: grayTextStyle),
+          // Button
+          ElevatedButton(
+            onPressed: () {
+              if (bookingData != null) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        DetailBookingPage(bookingModel: bookingData!),
+                  ),
+                );
+              }
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: darkGrayColor,
+              minimumSize: const Size(160, 50),
+            ),
+            child: Text(
+              'View Receipt',
+              style: whiteTextStyle.copyWith(
+                fontSize: 16,
+                fontWeight: semiBold,
+              ),
+            ),
           ),
         ],
       ),
