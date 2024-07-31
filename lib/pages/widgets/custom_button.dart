@@ -1,39 +1,37 @@
 import 'package:flutter/material.dart';
-import 'package:hayy_hotelio_app/shared/style.dart';
+import 'package:hayy_hotelio_app/shared/styles.dart';
 
 class CustomButton extends StatelessWidget {
   final String text;
+  final VoidCallback? onPressed;
   final double width;
   final double height;
-  final VoidCallback onTap;
   const CustomButton({
     super.key,
     required this.text,
+    required this.onPressed,
     this.width = double.infinity,
     this.height = 50,
-    required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(50),
+        borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
             color: greenColor,
-            offset: const Offset(0, 5),
             blurRadius: 15,
-          )
+            offset: const Offset(0, 8),
+          ),
         ],
       ),
       child: ElevatedButton(
-        onPressed: onTap,
+        onPressed: onPressed,
         style: ElevatedButton.styleFrom(
           backgroundColor: greenColor,
           minimumSize: Size(width, height),
-          shadowColor: greenColor,
-          elevation: 8,
         ),
         child: Text(
           text,

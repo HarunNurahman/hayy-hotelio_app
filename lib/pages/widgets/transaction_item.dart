@@ -1,45 +1,38 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:hayy_hotelio_app/models/booking_model.dart';
-import 'package:hayy_hotelio_app/shared/style.dart';
-
-import '../../shared/shared_method.dart';
+import 'package:hayy_hotelio_app/shared/app_format.dart';
+import 'package:hayy_hotelio_app/shared/styles.dart';
 
 class TransactionItem extends StatelessWidget {
-  // final String imgUrl;
-  // final String name;
-  // final String date;
-  final bool isPaid;
   final BookingModel booking;
-  const TransactionItem({
-    super.key,
-    // required this.imgUrl,
-    // required this.name,
-    // required this.date,
-    required this.booking,
-    this.isPaid = false,
-  });
+
+  const TransactionItem({super.key, required this.booking});
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(16),
-      margin: const EdgeInsets.only(top: 16),
       decoration: BoxDecoration(
         color: whiteColor,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Row(
         children: [
+          // Hotel cover
           ClipRRect(
             borderRadius: BorderRadius.circular(16),
-            child: Image.network(
-              booking.cover!,
+            child: CachedNetworkImage(
+              imageUrl: booking.cover!,
               width: 90,
               height: 70,
               fit: BoxFit.cover,
             ),
           ),
           const SizedBox(width: 12),
+          // Nama hotel dan status booking
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -52,26 +45,25 @@ class TransactionItem extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 4),
-                Text(
-                  AppFormat.date(booking.date!),
-                  style: grayTextStyle,
-                ),
+                Text(AppFormat.date(booking.date!), style: blackTextStyle)
               ],
             ),
           ),
+          // Payment status
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 10,
+              vertical: 6,
+            ),
             decoration: BoxDecoration(
               color: booking.status == 'PAID' ? darkGrayColor : redColor,
               borderRadius: BorderRadius.circular(50),
             ),
-            child: Center(
-              child: Text(
-                booking.status!,
-                style: whiteTextStyle.copyWith(
-                  fontSize: 10,
-                  fontWeight: semiBold,
-                ),
+            child: Text(
+              booking.status!,
+              style: whiteTextStyle.copyWith(
+                fontSize: 10,
+                fontWeight: semiBold,
               ),
             ),
           ),

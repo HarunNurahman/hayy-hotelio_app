@@ -52,22 +52,58 @@ class BookingModel {
       );
 
   Map<String, dynamic> toJson() => {
-        "id": id,
-        "id_hotel": idHotel,
-        "cover": cover,
-        "name": name,
-        "location": location,
-        "date": date,
-        "guest": guest,
-        "breakfast": breakfast,
-        "check_in_time": checkInTime,
-        "night": night,
-        "service_fee": serviceFee,
-        "activity": activity,
-        "total_payment": totalPayment,
-        "status": status,
-        "is_done": isDone,
+        'id': id,
+        'id_hotel': idHotel,
+        'cover': cover,
+        'name': name,
+        'location': location,
+        'date': date,
+        'guest': guest,
+        'breakfast': breakfast,
+        'check_in_time': checkInTime,
+        'night': night,
+        'service_fee': serviceFee,
+        'activity': activity,
+        'total_payment': totalPayment,
+        'status': status,
+        'is_done': isDone,
       };
+
+  BookingModel copyWith({
+    String? id,
+    String? idHotel,
+    String? cover,
+    String? name,
+    String? location,
+    String? date,
+    int? guest,
+    String? breakfast,
+    String? checkInTime,
+    int? night,
+    int? serviceFee,
+    int? activity,
+    int? totalPayment,
+    String? status,
+    bool? isDone,
+  }) {
+    return BookingModel(
+      id: id ?? this.id,
+      idHotel: idHotel ?? this.idHotel,
+      cover: cover ?? this.cover,
+      name: name ?? this.name,
+      location: location ?? this.location,
+      date: date ?? this.date,
+      guest: guest ?? this.guest,
+      breakfast: breakfast ?? this.breakfast,
+      checkInTime: checkInTime ?? this.checkInTime,
+      night: night ?? this.night,
+      serviceFee: serviceFee ?? this.serviceFee,
+      activity: activity ?? this.activity,
+      totalPayment: totalPayment ?? this.totalPayment,
+      status: status ?? this.status,
+      isDone: isDone ?? this.isDone,
+    );
+  }
 }
 
 BookingModel get initBooking => BookingModel(

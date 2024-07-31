@@ -1,14 +1,11 @@
-import 'package:flutter/widgets.dart';
-import 'package:hayy_hotelio_app/shared/style.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
+import 'package:hayy_hotelio_app/shared/styles.dart';
 
 class ActivityItem extends StatelessWidget {
-  final String name;
   final String imgUrl;
-  const ActivityItem({
-    super.key,
-    required this.name,
-    required this.imgUrl,
-  });
+  final String name;
+  const ActivityItem({super.key, required this.imgUrl, required this.name});
 
   @override
   Widget build(BuildContext context) {
@@ -17,10 +14,11 @@ class ActivityItem extends StatelessWidget {
       children: [
         ClipRRect(
           borderRadius: BorderRadius.circular(16),
-          child: Image.network(
-            imgUrl,
+          child: CachedNetworkImage(
+            imageUrl: imgUrl,
             width: 90,
             height: 70,
+            fit: BoxFit.cover,
           ),
         ),
         const SizedBox(height: 6),

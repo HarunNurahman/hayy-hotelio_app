@@ -1,18 +1,24 @@
-import 'package:flutter/widgets.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:hayy_hotelio_app/models/hotel_model.dart';
-import 'package:hayy_hotelio_app/shared/shared_method.dart';
-import 'package:hayy_hotelio_app/shared/style.dart';
+import 'package:hayy_hotelio_app/shared/app_format.dart';
+import 'package:hayy_hotelio_app/shared/styles.dart';
 
 class HotelItem extends StatelessWidget {
-  final HotelModel hotel;
+  // final String imgUrl;
+  // final String name;
+  // final double price;
+  // final double rating;
+  final HotelModel? hotel;
   final VoidCallback? onTap;
   const HotelItem({
     super.key,
+    // required this.imgUrl,
     // required this.name,
     // required this.price,
-    // required this.imgUrl,
-    required this.hotel,
+    // required this.rating,
+    this.hotel,
     this.onTap,
   });
 
@@ -29,68 +35,77 @@ class HotelItem extends StatelessWidget {
         ),
         child: Column(
           children: [
-            // Hotel image
-            ClipRRect(
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(16),
-                topRight: Radius.circular(16),
-              ),
-              child: Container(
+            // Hotel cover
+            CachedNetworkImage(
+              imageUrl: hotel!.cover!,
+              imageBuilder: (context, imageProvider) => Container(
                 height: 180,
                 decoration: BoxDecoration(
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(16),
+                    topRight: Radius.circular(16),
+                  ),
                   image: DecorationImage(
+                    image: imageProvider,
                     fit: BoxFit.cover,
-                    image: NetworkImage(hotel.cover!),
                   ),
                 ),
               ),
             ),
+
+            // Hotel information
             Padding(
               padding: const EdgeInsets.all(16),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   // Hotel name and price
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        hotel.name!,
-                        style: blackTextStyle.copyWith(
-                          fontSize: 18,
-                          fontWeight: semiBold,
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Hotel name
+                        Text(
+                          hotel!.name!,
+                          style: blackTextStyle.copyWith(
+                            fontSize: 18,
+                            fontWeight: semiBold,
+                          ),
                         ),
-                      ),
-                      RichText(
-                        text: TextSpan(
-                          children: [
-                            TextSpan(
-                              text: 'Start from ',
-                              style: grayTextStyle,
-                            ),
-                            TextSpan(
-                              text: AppFormat.currency(hotel.price!),
-                              style: grayTextStyle.copyWith(
-                                color: darkGrayColor,
-                                fontWeight: semiBold,
+                        const SizedBox(height: 4),
+                        // Hotel price/night
+                        RichText(
+                          text: TextSpan(
+                            children: [
+                              TextSpan(
+                                text: 'Start from ',
+                                style: grayTextStyle,
                               ),
-                            ),
-                            TextSpan(
-                              text: '/night',
-                              style: grayTextStyle,
-                            ),
-                          ],
+                              TextSpan(
+                                text: AppFormat.currency(hotel!.price!),
+                                style: grayTextStyle.copyWith(
+                                  color: darkGrayColor,
+                                  fontWeight: semiBold,
+                                ),
+                              ),
+                              TextSpan(
+                                text: '/night',
+                                style: grayTextStyle,
+                              ),
+                            ],
+                          ),
                         ),
-                      )
-                    ],
+                      ],
+                    ),
                   ),
+                  // Hotel rating
                   RatingBar.builder(
-                    initialRating: hotel.rate!,
+                    initialRating: hotel!.rate!,
+                    itemPadding: const EdgeInsets.only(left: 5),
                     minRating: 0,
                     direction: Axis.horizontal,
                     allowHalfRating: true,
                     ignoreGestures: true,
-                    itemSize: 18,
+                    itemSize: 16,
                     unratedColor: lightGrayColor,
                     itemBuilder: (context, index) {
                       return Image.asset('assets/icons/ic_star_on.png');
@@ -99,7 +114,7 @@ class HotelItem extends StatelessWidget {
                   )
                 ],
               ),
-            ),
+            )
           ],
         ),
       ),

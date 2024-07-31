@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:hayy_hotelio_app/shared/style.dart';
+import 'package:hayy_hotelio_app/shared/styles.dart';
 
 class CategoryItem extends StatelessWidget {
-  final String text;
-  final bool isSelected;
   final VoidCallback? onTap;
+  final bool isSelected;
+  final String text;
   const CategoryItem({
     super.key,
-    required this.text,
-    this.isSelected = false,
     this.onTap,
+    this.isSelected = false,
+    required this.text,
   });
 
   @override
@@ -18,17 +18,18 @@ class CategoryItem extends StatelessWidget {
       onTap: onTap,
       child: Container(
         margin: const EdgeInsets.only(right: 16),
-        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
-        decoration: BoxDecoration(
-          color: isSelected ? greenColor : whiteColor,
-          borderRadius: BorderRadius.circular(20),
+        padding: const EdgeInsets.symmetric(
+          horizontal: 20,
+          vertical: 12,
         ),
-        child: Center(
-          child: Text(
-            text,
-            style: blackTextStyle.copyWith(
-              fontWeight: isSelected ? semiBold : medium,
-            ),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          color: isSelected ? greenColor : whiteColor,
+        ),
+        child: Text(
+          text,
+          style: blackTextStyle.copyWith(
+            fontWeight: semiBold,
           ),
         ),
       ),

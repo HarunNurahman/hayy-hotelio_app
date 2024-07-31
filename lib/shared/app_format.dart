@@ -23,14 +23,24 @@ class AppFormat {
       decimalDigits: 0,
     ).format(number);
   }
+
+  // Custom snackbar
+  void showCustomSnackBar(BuildContext context, String message) {
+    Flushbar(
+      message: message,
+      flushbarPosition: FlushbarPosition.TOP,
+      backgroundColor: Colors.redAccent,
+      duration: const Duration(seconds: 3),
+    ).show(context);
+  }
 }
 
-// Custom snackbar
-void showCustomSnackBar(BuildContext context, String message) {
-  Flushbar(
-    message: message,
-    flushbarPosition: FlushbarPosition.TOP,
-    backgroundColor: Colors.redAccent,
-    duration: const Duration(seconds: 3),
-  ).show(context);
-}
+RegExp emailRexExp = RegExp(r'^[\w-\.]+@([\w-]+.)+[\w-]{2,4}$');
+
+RegExp passwordRexExp = RegExp(
+  r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~`)\%\-(_+=;:,.<>/?"[{\]}\|^]).{8,}$',
+);
+
+RegExp specialCharRexExp = RegExp(
+  r'^(?=.*?[!@#$&*~`)\%\-(_+=;:,.<>/?"[{\]}\|^])',
+);

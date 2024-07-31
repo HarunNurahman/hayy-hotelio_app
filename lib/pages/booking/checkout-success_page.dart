@@ -1,40 +1,34 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:hayy_hotelio_app/controllers/navigation_controller.dart';
-import 'package:hayy_hotelio_app/models/hotel_model.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hayy_hotelio_app/bloc/dashboard/dashboard_bloc.dart';
 import 'package:hayy_hotelio_app/pages/widgets/custom_button.dart';
-import 'package:hayy_hotelio_app/shared/style.dart';
+import 'package:hayy_hotelio_app/shared/styles.dart';
 
 class CheckoutSuccessPage extends StatelessWidget {
   const CheckoutSuccessPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final navigation = Get.put(NavigationController());
-    HotelModel hotel = ModalRoute.of(context)!.settings.arguments as HotelModel;
-
     return Scaffold(
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            // Hotel cover
             Container(
+              margin: const EdgeInsets.only(bottom: 50),
+              width: 200,
+              height: 200,
               decoration: BoxDecoration(
-                border: Border.all(color: whiteColor, width: 6),
-                color: whiteColor,
+                border: Border.all(color: Colors.white, width: 10),
                 borderRadius: BorderRadius.circular(24),
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(20),
-                child: Image.network(
-                  hotel.cover!,
-                  width: 200,
-                  height: 200,
+                image: const DecorationImage(
+                  image: AssetImage('assets/images/img_hotel_1.png'),
                   fit: BoxFit.cover,
                 ),
               ),
             ),
-            const SizedBox(height: 50),
+            // Content
             Text(
               'Payment Success',
               style: blackTextStyle.copyWith(
@@ -44,18 +38,25 @@ class CheckoutSuccessPage extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             Text(
-              'Enjoy your a whole new experience\n in this beautiful world',
+              'Enjoy your a whole new experience\nin this beautiful world',
               style: blackTextStyle.copyWith(fontSize: 16),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 50),
-            CustomButton(
-              text: 'View My Booking',
-              onTap: () {
-                navigation.setIndexPage = 1;
-                Get.offAllNamed('/dashboard');
+            BlocBuilder<DashboardBloc, DashboardState>(
+              builder: (context, state) {
+                return CustomButton(
+                  width: 210,
+                  text: 'View My Booking',
+                  onPressed: () {
+                    context.read<DashboardBloc>().add(const OnTabChange(1));
+                    Navigator.pushNamed(
+                      context,
+                      '/dashboard',
+                    );
+                  },
+                );
               },
-              width: 210,
             )
           ],
         ),
